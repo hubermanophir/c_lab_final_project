@@ -34,3 +34,5 @@ build_env:
 zip: clean
 	rm -f $(ZIP_NAME)
 	zip -r $(ZIP_NAME) *
+
+##gcc -MM src/assembler.c src/preprocessor/preprocessor.c >> makefile
