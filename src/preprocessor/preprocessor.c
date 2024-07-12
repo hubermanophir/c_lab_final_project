@@ -1,19 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-char *get_file_name(char *file_name, char extention[4]) {
-
-  int length = strlen(file_name);
-
-  char *new_file_name = malloc(length + 4);
-
-  strcpy(new_file_name, file_name);
-
-  strcat(new_file_name, extention);
-
-  return new_file_name;
-}
+#include "../../header_files/preprocessor/preprocessor_helper.h"
 
 void preprocessor(char *file_name) {
   char line[80];
