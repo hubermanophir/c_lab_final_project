@@ -7,7 +7,7 @@ BIN_DIR		= $(BUILD_DIR)/bin
 ZIP_NAME	= mmn22.zip
 
 ifdef DEBUG
-CFLAGS += -g
+CFLAGS += -g -fsanitize=address
 endif
  
 .PHONY: clean build_env all
