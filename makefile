@@ -17,6 +17,7 @@ all: build_env $(PROG_NAME)
 $(PROG_NAME):  assembler.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analizer.o preprocessor.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
+
 assembler.o: src/assembler.c \
  src/../header_files/preprocessor/preprocessor.h
 hashtable.o: src/data_structures/hashtable.c \
@@ -40,7 +41,6 @@ preprocessor.o: src/preprocessor/preprocessor.c \
  src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h \
  src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
 
-
 %.o:
 	$(CC) $(CFLAGS) -c $< -o $(OBJ_DIR)/$@
  
@@ -57,5 +57,4 @@ zip: clean
 	zip -r $(ZIP_NAME) *
 
 ##gcc -MM $(find ./ -type f -name '*.c' -printf '%P\n') >> makefile
-
 
