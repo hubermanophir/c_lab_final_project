@@ -17,10 +17,8 @@ all: build_env $(PROG_NAME)
 $(PROG_NAME): assembler.o preprocessor.o helper.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
-assembler.o: src/assembler.c \
- src/../header_files/preprocessor/preprocessor.h
-preprocessor.o: src/preprocessor/preprocessor.c \
- src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
+assembler.o: src/assembler.c src/../header_files/preprocessor/preprocessor.h
+preprocessor.o: src/preprocessor/preprocessor.c src/preprocessor/../../header_files/global.h src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
 helper.o: src/preprocessor/helper.c
 
 
