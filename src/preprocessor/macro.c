@@ -1,4 +1,6 @@
 #include "../../header_files/preprocessor/macro.h"
+#include "../../header_files/data_structures/hashtable.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 void init_macro(Hashtable *macros, Macro *macro, char *name) {
@@ -27,4 +29,12 @@ void free_macro(Macro *macro) {
   free_list(macro->lines);
   free(macro->name);
   free(macro);
+}
+
+void output_macro(Macro *macro, FILE *output) {
+  Node *current = macro->lines->head;
+  while (current) {
+    fputs((char *)current->data, output);
+    current = current->next;
+  }
 }

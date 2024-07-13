@@ -14,29 +14,31 @@ endif
  
 all: build_env $(PROG_NAME) 
  
-$(PROG_NAME): assembler.o preprocessor.o helper.o hashtable.o linked_list.o macro.o
+$(PROG_NAME):  assembler.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analizer.o preprocessor.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
-
 assembler.o: src/assembler.c \
  src/../header_files/preprocessor/preprocessor.h
-preprocessor.o: src/preprocessor/preprocessor.c \
- src/preprocessor/../../header_files/global.h \
- src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
-assembler.o: src/assembler.c \
- src/../header_files/preprocessor/preprocessor.h
-preprocessor.o: src/preprocessor/preprocessor.c \
- src/preprocessor/../../header_files/global.h \
- src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
-helper.o: src/preprocessor/helper.c
 hashtable.o: src/data_structures/hashtable.c \
  src/data_structures/../../header_files/data_structures/hashtable.h
 linked_list.o: src/data_structures/linked_list.c \
  src/data_structures/../../header_files/data_structures/linked_list.h
+global.o: src/global.c src/../header_files/global.h
+helper.o: src/preprocessor/helper.c
 macro.o: src/preprocessor/macro.c \
  src/preprocessor/../../header_files/preprocessor/macro.h \
- src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/hashtable.h \
- src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h
+ src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h \
+ src/preprocessor/../../header_files/data_structures/hashtable.h
+macro_line_analizer.o: src/preprocessor/macro_line_analizer.c \
+ src/preprocessor/../../header_files/data_structures/hashtable.h \
+ src/preprocessor/../../header_files/global.h \
+ src/preprocessor/../../header_files/preprocessor/preprocessor.h
+preprocessor.o: src/preprocessor/preprocessor.c \
+ src/preprocessor/../../header_files/data_structures/hashtable.h \
+ src/preprocessor/../../header_files/global.h \
+ src/preprocessor/../../header_files/preprocessor/macro.h \
+ src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h \
+ src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
 
 
 %.o:
@@ -54,4 +56,6 @@ zip: clean
 	rm -f $(ZIP_NAME)
 	zip -r $(ZIP_NAME) *
 
-##gcc -MM src/assembler.c src/preprocessor/preprocessor.c src/preprocessor/helper.c src/data_structures/hashtable.c src/data_structures/linked_list.c src/preprocessor/macro.c >> makefile
+##gcc -MM $(find ./ -type f -name '*.c' -printf '%P\n') >> makefile
+
+
