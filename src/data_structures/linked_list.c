@@ -1,4 +1,4 @@
-#include "../../header_files/data_structures/data_structures.h"
+#include "../../header_files/data_structures/linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
 

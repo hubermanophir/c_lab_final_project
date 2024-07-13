@@ -1,14 +1,9 @@
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 
 char *get_file_name(char *file_name, char extention[4]) {
   char *new_file_name = malloc(strlen(file_name) + 4);
-
-  if (new_file_name == NULL) {
-    printf("Memory allocation failed\n");
-    exit(1);
-  }
 
   strcpy(new_file_name, file_name);
   strcat(new_file_name, extention);
