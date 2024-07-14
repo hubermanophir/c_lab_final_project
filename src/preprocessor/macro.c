@@ -1,7 +1,14 @@
-#include "../../header_files/preprocessor/macro.h"
 #include "../../header_files/data_structures/hashtable.h"
+#include "../../header_files/data_structures/linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef struct Macro {
+  char *name;
+  LinkedList *lines;
+} Macro;
+
+
 
 void init_macro(Hashtable *macros, Macro *macro, char *name) {
   macro = (Macro *)malloc(sizeof(Macro));

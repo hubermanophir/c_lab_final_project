@@ -1,6 +1,17 @@
-#include "../../header_files/data_structures/linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef struct Node {
+  void *data;
+  struct Node *next;
+  struct Node *prev;
+} Node;
+
+typedef struct LinkedList {
+  Node *head;
+  Node *tail;
+} LinkedList;
+
 
 void init_list(LinkedList *list) {
   list->head = NULL;

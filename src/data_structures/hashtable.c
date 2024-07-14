@@ -1,8 +1,17 @@
-#include "../../header_files/data_structures/hashtable.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef struct HashEntry {
+  char *key;
+  void *value;
+  struct HashEntry *next;
+} HashEntry;
+
+typedef struct Hashtable {
+  int size;
+  HashEntry **table;
+} Hashtable;
 
 int hash(char *key, int size) {
   int hash = 0;

@@ -1,3 +1,6 @@
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
+
 typedef struct Node {
   void *data;
   struct Node *next;
@@ -14,3 +17,5 @@ void init_list(LinkedList *list);
 void add_to_list(LinkedList *list, void *data);
 
 void free_list(LinkedList *list);
+
+#endif

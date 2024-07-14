@@ -1,8 +1,13 @@
-#include "../../header_files/data_structures/hashtable.h"
 #include "../../header_files/global.h"
 #include "../../header_files/preprocessor/Macro.h"
-#include "../../header_files/preprocessor/preprocessor.h"
 #include <string.h>
+
+typedef enum LineType {
+  MACRO_DECLARATION,
+  MACRO_END,
+  MACRO_CALL,
+  CODE_LINE
+} LineType;
 
 int does_contain_whitespace(char *test_str) {
   char *temp;
@@ -55,8 +60,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros) {
     line += 4;
     SKIP_WHITESPACE(line);
     is_valid = is_valid_macro_name(line, existing_macros);
-    if(is_valid){
-      
+    if (is_valid) {
     }
   }
   return MACRO_DECLARATION;

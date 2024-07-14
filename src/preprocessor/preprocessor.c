@@ -21,7 +21,7 @@ char *preprocessor(char *file_name) {
     return NULL;
   }
 
-  while(fgets(line, MAX_LINE_LENGTH, as_file)) {
+  while (fgets(line, MAX_LINE_LENGTH, as_file)) {
     LineType line_type = get_line_type(line, macros);
   }
 
