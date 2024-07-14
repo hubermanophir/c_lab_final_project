@@ -69,7 +69,7 @@ static int does_contain_invalid_chars(char *test_str) {
   return temp ? 1 : 0;
 }
 
-static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
+static InvalidMacroType is_valid_macro_name(char *name,
                                             Hashtable *existing_macros) {
   if (get_hashtable(existing_macros, name)) {
     return EXISTING;
@@ -91,18 +91,29 @@ static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
   return VALID;
 }
 
-LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro) {
+void is_macro_in_beginning(char *line, char *current_macro_name) {
+  char *tok;
+  tok = strstr(line, current_macro_name);
+  if (tok && strncmp(tok, current_macro_name, strlen(current_macro_name))) {
+    printf("Error: Macro call in the middle of the line\n");
+    exit(1);
+  }
+}
+
+LineType get_line_type(char *line, Hashtable *existing_macros,
+                       Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
-  int is_valid = 1;
-  int is_in_symbol = 0;
 
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
     trim_trailing_whitespace(line);
+    SKIP_WHITESPACE(line);
+  } else {
+    return CODE_LINE;
   }
-
+  is_macro_in_beginning(line, current_macro ? current_macro->name : "");
   existing_macro = (Macro *)get_hashtable(existing_macros, line);
 
   if (existing_macro) {
@@ -128,8 +139,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_ma
     line = tok;
     line += 4;
     SKIP_WHITESPACE(line);
-    handle_invalid_name(
-        is_valid_macro_name(line, is_in_symbol, existing_macros), line);
+    handle_invalid_name(is_valid_macro_name(line, existing_macros), line);
     return MACRO_DECLARATION;
   }
 
