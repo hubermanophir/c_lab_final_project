@@ -16,6 +16,7 @@ typedef enum InvalidMacroType {
   OPT_NAME,
   DIRECTIVE_NAME,
   EXISTING,
+  SYMBOL,
   VALID
 } InvalidMacroType;
 
@@ -41,6 +42,10 @@ void handle_invalid_name(InvalidMacroType type, char *name) {
     printf("Error: Macro name already exists: %s\n", name);
     exit(1);
     break;
+  case SYMBOL:
+    printf("Error: Macro name declared in symbol: %s\n", name);
+    exit(1);
+    break;
   default:
     break;
   }
@@ -63,37 +68,33 @@ static int does_contain_invalid_chars(char *test_str) {
   return temp ? 1 : 0;
 }
 
-static InvalidMacroType is_valid_macro_name(char *name,
+static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
                                             Hashtable *existing_macros) {
   if (get_hashtable(existing_macros, name)) {
-    printf("In existing macros\n");
     return EXISTING;
   }
   if (get_opcode_from_string(name) != -1) {
-    printf("In opcode\n");
-
     return OPT_NAME;
   }
   if (get_directive_from_string(name) != -1) {
-    printf("In directive\n");
-
     return DIRECTIVE_NAME;
   }
   if (does_contain_invalid_chars(name)) {
-    printf("In whitespace\n");
     return INVALID_NAME;
   }
-
+  if (is_in_symbol) {
+    return SYMBOL;
+  }
   return VALID;
 }
 
-LineType get_line_type(char *line, Hashtable *existing_macros,
-                       Macro *current_macro) {
+LineType get_line_type(char *line, Hashtable *existing_macros) {
   char *tok;
   Macro *existing_macro;
   int is_valid = 1;
+  int is_in_symbol = 0;
 
-  /*clean line*/
+  /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
     trim_trailing_whitespace(line);
@@ -105,11 +106,20 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
     return MACRO_CALL;
   }
 
+  tok = strpbrk(line, ":");
+  if (tok) {
+    is_in_symbol = 1;
+    line = tok + 1;
+    SKIP_WHITESPACE(line);
+  }
+
   tok = strstr(line, "endmacr");
   if (tok) {
     line = tok;
     line += 7;
     SKIP_WHITESPACE(line);
+
+    /*Nothing other then macro end*/
     if (*line == '\0') {
       return MACRO_END;
     } else {
@@ -122,7 +132,8 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
     line = tok;
     line += 4;
     SKIP_WHITESPACE(line);
-    handle_invalid_name(is_valid_macro_name(line, existing_macros), line);
+    handle_invalid_name(
+        is_valid_macro_name(line, is_in_symbol, existing_macros), line);
     return MACRO_DECLARATION;
   }
 

@@ -12,7 +12,6 @@ typedef enum LineType {
   CODE_LINE
 } LineType;
 
-LineType get_line_type(char *line, Hashtable *existing_macros,
-                       Macro *current_macro);
+LineType get_line_type(char *line, Hashtable *existing_macros);
 
 #endif
