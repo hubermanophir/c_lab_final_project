@@ -2,6 +2,7 @@
 #include <string.h>
 
 Opcode get_opcode_from_string(char *opcode) {
+
   if (strcmp(opcode, "mov") == 0) {
     return MOV;
   } else if (strcmp(opcode, "cmp") == 0) {
@@ -49,4 +50,12 @@ Directive get_directive_from_string(char *directive) {
     return EXTERN;
   }
   return -1;
+}
+
+void trim_trailing_whitespace(char *str) {
+  int len = strlen(str);
+  while (len > 0 && isspace(str[len - 1])) {
+    str[len - 1] = '\0';
+    len--;
+  }
 }

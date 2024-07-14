@@ -38,4 +38,6 @@ Opcode get_opcode_from_string(char *opcode);
 typedef enum Directive { DATA, STRING, ENTRY, EXTERN } Directive;
 Directive get_directive_from_string(char *directive);
 
+void trim_trailing_whitespace(char *str);
+
 #endif
