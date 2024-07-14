@@ -108,7 +108,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros) {
     if (!does_contain_invalid_chars(line)) {
       return MACRO_END;
     } else {
-      printf("Invalid macro end\n");
+      printf("Error: Invalid macro end\n");
       exit(1);
     }
   }
