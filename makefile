@@ -35,11 +35,13 @@ macro_line_analizer.o: src/preprocessor/macro_line_analizer.c \
  src/preprocessor/../../header_files/global.h \
  src/preprocessor/../../header_files/preprocessor/preprocessor.h
 preprocessor.o: src/preprocessor/preprocessor.c \
- src/preprocessor/../../header_files/data_structures/hashtable.h \
  src/preprocessor/../../header_files/global.h \
  src/preprocessor/../../header_files/preprocessor/macro.h \
  src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h \
- src/preprocessor/../../header_files/preprocessor/preprocessor_helper.h
+ src/preprocessor/../../header_files/preprocessor/helper.h \
+ src/preprocessor/../../header_files/preprocessor/macro_line_analizer.h \
+ src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/hashtable.h \
+ src/preprocessor/../../header_files/preprocessor/../../header_files/preprocessor/preprocessor.h
 
 %.o:
 	$(CC) $(CFLAGS) -c $< -o $(OBJ_DIR)/$@

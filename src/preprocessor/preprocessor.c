@@ -1,7 +1,7 @@
-#include "../../header_files/data_structures/hashtable.h"
 #include "../../header_files/global.h"
 #include "../../header_files/preprocessor/macro.h"
-#include "../../header_files/preprocessor/preprocessor_helper.h"
+#include "../../header_files/preprocessor/helper.h"
+#include "../../header_files/preprocessor/macro_line_analizer.h"
 
 #include <stdio.h>
 #include <stdlib.h>
