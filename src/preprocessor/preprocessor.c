@@ -26,27 +26,12 @@ char *preprocessor(char *file_name) {
   while (fgets(line, MAX_LINE_LENGTH, as_file)) {
     strcpy(line_copy, line);
     line_type = get_line_type(line_copy, macros, current_macro);
-    switch (line_type) {
-    case MACRO_DECLARATION: {
-      printf("here");
-    }
-    case CODE_LINE: {
-      printf("here");
-    }
-    case MACRO_CALL: {
-      printf("here");
-    }
-    case MACRO_END: {
-      current_macro = NULL;
-    }
-    }
-
-    fclose(an_file);
-    fclose(as_file);
-    free_hashtable(macros);
-    free(as_file_name);
-    free(an_file_name);
-    return an_file_name;
   }
-  return NULL;
+
+  fclose(an_file);
+  fclose(as_file);
+  free_hashtable(macros);
+  free(as_file_name);
+  free(an_file_name);
+  return an_file_name;
 }
