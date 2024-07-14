@@ -1,4 +1,4 @@
-void preprocessor(char *file_name);
+char *preprocessor(char *file_name);
 
 typedef enum LineType {
   MACRO_DECLARATION,

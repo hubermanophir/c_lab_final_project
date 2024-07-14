@@ -50,12 +50,3 @@ Directive get_directive_from_string(char *directive) {
   }
   return -1;
 }
-
-
-int does_contain_whitespace(char *line) {
-  char *temp;
-  temp = line;
-
-  temp = strpbrk(temp, SPACE_CHARS);
-  return !strcmp(temp, line);
-}

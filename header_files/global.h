@@ -6,6 +6,8 @@
 
 #define SPACE_CHARS " \t\n\v\f"
 
+#define INVALID_NAME_CHARS ".,; \t\n\v\f"
+
 typedef enum Opcode {
   MOV,
   CMP,
@@ -29,5 +31,3 @@ Opcode get_opcode_from_string(char *opcode);
 
 typedef enum Directive { DATA, STRING, ENTRY, EXTERN } Directive;
 Directive get_directive_from_string(char *directive);
-
-int does_contain_whitespace(char *line);
