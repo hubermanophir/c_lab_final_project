@@ -12,39 +12,37 @@ typedef struct LinkedList {
   Node *tail;
 } LinkedList;
 
-
-void init_list(LinkedList *list) {
+LinkedList * init_list() {
+  LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
   list->head = NULL;
   list->tail = NULL;
-}
 
-void add_to_list(LinkedList *list, void *data) {
-  Node *new_node = (Node *)malloc(sizeof(Node));
-  new_node->data = data;
-  new_node->next = NULL;
-  new_node->prev = list->tail;
-
-  if (list->tail) {
-    list->tail->next = new_node;
-  }
-
-  list->tail = new_node;
-
-  if (!list->head) {
-    list->head = new_node;
-  }
+  return list;
 }
 
 void free_list(LinkedList *list) {
   Node *current = list->head;
   Node *next;
 
-  while (current) {
+  while (current != NULL) {
     next = current->next;
     free(current);
     current = next;
   }
 
-  list->head = NULL;
-  list->tail = NULL;
+  free(list);
+}
+
+void add_to_list(LinkedList *list, void *data) {
+  Node *node = (Node *)malloc(sizeof(Node));
+  node->data = data;
+  node->next = NULL;
+
+  if (list->head == NULL) {
+    list->head = node;
+    list->tail = node;
+  } else {
+    list->tail->next = node;
+    list->tail = node;
+  }
 }

@@ -8,13 +8,10 @@ typedef struct Macro {
   LinkedList *lines;
 } Macro;
 
-
-
 void init_macro(Hashtable *macros, Macro *macro, char *name) {
   macro = (Macro *)malloc(sizeof(Macro));
   macro->name = name;
-  macro->lines = (LinkedList *)malloc(sizeof(LinkedList));
-  init_list(macro->lines);
+  macro->lines = init_list();
   put_hashtable(macros, name, macro);
 }
 
@@ -33,7 +30,7 @@ void append_macro_line(Macro *macro, char *line) {
 }
 
 void free_macro(Macro *macro) {
-  free_list(macro->lines);
+  free_list((macro->lines));
   free(macro->name);
   free(macro);
 }

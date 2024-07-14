@@ -12,7 +12,7 @@ typedef struct LinkedList {
   Node *tail;
 } LinkedList;
 
-void init_list(LinkedList *list);
+LinkedList * init_list();
 
 void add_to_list(LinkedList *list, void *data);
 

@@ -69,7 +69,7 @@ static int does_contain_invalid_chars(char *test_str) {
   return temp ? 1 : 0;
 }
 
-static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
+static InvalidMacroType is_valid_macro_name(char *name,
                                             Hashtable *existing_macros) {
   if (get_hashtable(existing_macros, name)) {
     return EXISTING;
@@ -91,20 +91,27 @@ static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
   return VALID;
 }
 
-LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro) {
+void check_macro_isolated_line(char *line, char *name) {
+  if (strncmp(line, name, strlen(name)) || line[strlen(name)] != '\0') {
+    printf("Error: Macro name is not isolated\n");
+    exit(1);
+  }
+}
+
+LineType get_line_type(char *line, Hashtable *existing_macros,
+                       Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
-  int is_valid = 1;
-  int is_in_symbol = 0;
 
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
     trim_trailing_whitespace(line);
+    SKIP_WHITESPACE(line);
   }
 
   existing_macro = (Macro *)get_hashtable(existing_macros, line);
-
+  /*implement!!!!*/
   if (existing_macro) {
     return MACRO_CALL;
   }
@@ -128,8 +135,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_ma
     line = tok;
     line += 4;
     SKIP_WHITESPACE(line);
-    handle_invalid_name(
-        is_valid_macro_name(line, is_in_symbol, existing_macros), line);
+    handle_invalid_name(is_valid_macro_name(line, existing_macros), line);
     return MACRO_DECLARATION;
   }
 
