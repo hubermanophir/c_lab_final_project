@@ -43,10 +43,6 @@ void handle_invalid_name(InvalidMacroType type, char *name) {
     printf("Error: Macro name already exists: %s\n", name);
     exit(1);
     break;
-  case SYMBOL:
-    printf("Error: Macro name declared in symbol: %s\n", name);
-    exit(1);
-    break;
   case LENGTH_ERROR:
     printf("Error: Macro name is too long: %s\n", name);
     exit(1);
@@ -84,10 +80,6 @@ static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
   if (get_directive_from_string(name) != -1) {
     return DIRECTIVE_NAME;
   }
-  if (is_in_symbol) {
-    return SYMBOL;
-  }
-
   if (strlen(name) > 30) {
     return LENGTH_ERROR;
   }
@@ -99,7 +91,7 @@ static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
   return VALID;
 }
 
-LineType get_line_type(char *line, Hashtable *existing_macros) {
+LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
   int is_valid = 1;
@@ -115,13 +107,6 @@ LineType get_line_type(char *line, Hashtable *existing_macros) {
 
   if (existing_macro) {
     return MACRO_CALL;
-  }
-
-  tok = strpbrk(line, ":");
-  if (tok) {
-    is_in_symbol = 1;
-    line = tok + 1;
-    SKIP_WHITESPACE(line);
   }
 
   tok = strstr(line, "endmacr");
