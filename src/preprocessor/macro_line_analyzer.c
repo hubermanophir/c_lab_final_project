@@ -53,6 +53,7 @@ static int does_contain_invalid_chars(char *test_str) {
   temp = strpbrk(temp, INVALID_NAME_CHARS);
 
   /*got to end of the line with no space in the string itself*/
+
   if (!temp) {
     return 0;
   }
@@ -86,7 +87,8 @@ static InvalidMacroType is_valid_macro_name(char *name,
   return VALID;
 }
 
-LineType get_line_type(char *line, Hashtable *existing_macros) {
+LineType get_line_type(char *line, Hashtable *existing_macros,
+                       Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
   int is_valid = 1;
@@ -105,7 +107,10 @@ LineType get_line_type(char *line, Hashtable *existing_macros) {
 
   tok = strstr(line, "endmacr");
   if (tok) {
-    if (!does_contain_invalid_chars(line)) {
+    line = tok;
+    line += 7;
+    SKIP_WHITESPACE(line);
+    if (*line == '\0') {
       return MACRO_END;
     } else {
       printf("Error: Invalid macro end\n");

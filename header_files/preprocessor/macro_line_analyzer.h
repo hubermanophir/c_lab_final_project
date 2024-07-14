@@ -2,6 +2,7 @@
 #define MACRO_ANALYZER_H
 
 #include "../../header_files/data_structures/hashtable.h"
+#include "../../header_files/preprocessor/macro.h"
 #include "../../header_files/preprocessor/preprocessor.h"
 
 typedef enum LineType {
@@ -11,6 +12,7 @@ typedef enum LineType {
   CODE_LINE
 } LineType;
 
-LineType get_line_type(char *line, Hashtable *existing_macros);
+LineType get_line_type(char *line, Hashtable *existing_macros,
+                       Macro *current_macro);
 
 #endif

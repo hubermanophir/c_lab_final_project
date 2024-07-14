@@ -1,5 +1,6 @@
 #include "../header_files/global.h"
 #include <string.h>
+#include <stdlib.h>
 
 Opcode get_opcode_from_string(char *opcode) {
 
@@ -58,4 +59,10 @@ void trim_trailing_whitespace(char *str) {
     str[len - 1] = '\0';
     len--;
   }
+}
+
+char * make_char_copy(char *str) {
+  char *copy = (char *)malloc(strlen(str) + 1);
+  strcpy(copy, str);
+  return copy;
 }

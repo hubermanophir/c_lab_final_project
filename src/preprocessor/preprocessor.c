@@ -5,11 +5,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char *preprocessor(char *file_name) {
-  char line[MAX_LINE_LENGTH];
+  char line[MAX_LINE_LENGTH], line_copy[MAX_LINE_LENGTH];
   FILE *as_file, *an_file;
   Macro *current_macro = NULL;
+  LineType line_type;
   Hashtable *macros = create_hashtable(100);
   char *as_file_name = get_file_name(file_name, ".as");
   char *an_file_name = get_file_name(file_name, ".an");
@@ -22,7 +24,9 @@ char *preprocessor(char *file_name) {
   }
 
   while (fgets(line, MAX_LINE_LENGTH, as_file)) {
-    LineType line_type = get_line_type(line, macros);
+    strcpy(line_copy, line);
+    line_type = get_line_type(line_copy, macros, current_macro);
+
   }
 
   fclose(an_file);

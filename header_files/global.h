@@ -40,4 +40,6 @@ Directive get_directive_from_string(char *directive);
 
 void trim_trailing_whitespace(char *str);
 
+char *make_char_copy(char *str);
+
 #endif
