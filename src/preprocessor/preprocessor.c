@@ -26,7 +26,6 @@ char *preprocessor(char *file_name) {
   while (fgets(line, MAX_LINE_LENGTH, as_file)) {
     strcpy(line_copy, line);
     line_type = get_line_type(line_copy, macros);
-
   }
 
   fclose(an_file);

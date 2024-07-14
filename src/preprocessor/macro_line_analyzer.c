@@ -17,6 +17,7 @@ typedef enum InvalidMacroType {
   DIRECTIVE_NAME,
   EXISTING,
   SYMBOL,
+  LENGTH_ERROR,
   VALID
 } InvalidMacroType;
 
@@ -44,6 +45,10 @@ void handle_invalid_name(InvalidMacroType type, char *name) {
     break;
   case SYMBOL:
     printf("Error: Macro name declared in symbol: %s\n", name);
+    exit(1);
+    break;
+  case LENGTH_ERROR:
+    printf("Error: Macro name is too long: %s\n", name);
     exit(1);
     break;
   default:
@@ -79,12 +84,18 @@ static InvalidMacroType is_valid_macro_name(char *name, int is_in_symbol,
   if (get_directive_from_string(name) != -1) {
     return DIRECTIVE_NAME;
   }
-  if (does_contain_invalid_chars(name)) {
-    return INVALID_NAME;
-  }
   if (is_in_symbol) {
     return SYMBOL;
   }
+
+  if (strlen(name) > 30) {
+    return LENGTH_ERROR;
+  }
+
+  if (does_contain_invalid_chars(name)) {
+    return INVALID_NAME;
+  }
+
   return VALID;
 }
 
