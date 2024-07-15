@@ -4,6 +4,7 @@
 #include "../../header_files/data_structures/linked_list.h"
 #include <stdio.h>
 #include <string.h>
+#define MAX_MACRO_NAME_LENGTH 31
 
 typedef struct Macro {
   char *name;

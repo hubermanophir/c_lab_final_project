@@ -21,4 +21,6 @@ void free_hashtable(Hashtable *hashtable);
 
 void free_macro_hashtable(Hashtable *hashtable);
 
+char **get_existing_macro_names(Hashtable *hashtable);
+
 #endif

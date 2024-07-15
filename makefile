@@ -19,25 +19,27 @@ $(PROG_NAME):  assembler.o hashtable.o linked_list.o global.o helper.o macro.o m
  
 assembler.o: src/assembler.c \
  src/../header_files/preprocessor/preprocessor.h
-hashtable.o: src/data_structures/hashtable.c
+hashtable.o: src/data_structures/hashtable.c \
+ src/data_structures/../../header_files/preprocessor/macro.h \
+ src/data_structures/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h
 linked_list.o: src/data_structures/linked_list.c
 global.o: src/global.c src/../header_files/global.h
 helper.o: src/preprocessor/helper.c
 macro.o: src/preprocessor/macro.c \
- src/preprocessor/../../header_files/data_structures/hashtable.h \
  src/preprocessor/../../header_files/data_structures/linked_list.h
 macro_line_analyzer.o: src/preprocessor/macro_line_analyzer.c \
+ src/preprocessor/../../header_files/data_structures/hashtable.h \
  src/preprocessor/../../header_files/global.h \
  src/preprocessor/../../header_files/preprocessor/Macro.h \
- src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/hashtable.h \
  src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h
 preprocessor.o: src/preprocessor/preprocessor.c \
  src/preprocessor/../../header_files/global.h \
  src/preprocessor/../../header_files/preprocessor/helper.h \
  src/preprocessor/../../header_files/preprocessor/macro.h \
- src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/hashtable.h \
  src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h \
  src/preprocessor/../../header_files/preprocessor/macro_line_analyzer.h \
+ src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/hashtable.h \
+ src/preprocessor/../../header_files/preprocessor/../../header_files/preprocessor/macro.h \
  src/preprocessor/../../header_files/preprocessor/../../header_files/preprocessor/preprocessor.h
 
 %.o:

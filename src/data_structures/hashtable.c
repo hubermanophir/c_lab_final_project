@@ -69,6 +69,22 @@ void *get_hashtable(Hashtable *hashtable, char *key) {
   return NULL;
 }
 
+char **get_existing_macro_names(Hashtable *hashtable) {
+  char **names = (char **)malloc(sizeof(char *) * hashtable->size);
+  int i;
+  int j = 0;
+  for (i = 0; i < hashtable->size; i++) {
+    HashEntry *entry = hashtable->table[i];
+
+    while (entry) {
+      names[j] = entry->key;
+      j++;
+      entry = entry->next;
+    }
+  }
+  return names;
+}
+
 void free_macro_hashtable(Hashtable *hashtable) {
   int i;
   for (i = 0; i < hashtable->size; i++) {

@@ -1,9 +1,10 @@
+#include "../../header_files/data_structures/hashtable.h"
 #include "../../header_files/global.h"
 #include "../../header_files/preprocessor/Macro.h"
-#include "../../header_files/data_structures/hashtable.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef enum LineType {
   MACRO_DECLARATION,
   MACRO_END,
@@ -81,7 +82,7 @@ static InvalidMacroType is_valid_macro_name(char *name,
   if (get_directive_from_string(name) != -1) {
     return DIRECTIVE_NAME;
   }
-  if (strlen(name) > 30) {
+  if (strlen(name) > MAX_MACRO_NAME_LENGTH) {
     return LENGTH_ERROR;
   }
 
@@ -99,21 +100,33 @@ void check_macro_isolated_line(char *line, char *name) {
   }
 }
 
+int get_is_macro_in_line(char *line, Hashtable *existing_macros) {
+  char **existing_macro_names = get_existing_macro_names(existing_macros);
+
+  free(existing_macro_names);
+  return 0;
+}
+
 LineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
-
+  int is_macro_in_line;
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
     trim_trailing_whitespace(line);
     SKIP_WHITESPACE(line);
   }
-
+  /*
+    is_macro_in_line = get_is_macro_in_line(line, existing_macros);
+  */
   existing_macro = (Macro *)get_hashtable(existing_macros, line);
   /*implement!!!!*/
+  printf("line: '%s'\n", line);
+
   if (existing_macro) {
+    printf("line:%s\n", line);
     return MACRO_CALL;
   }
 
