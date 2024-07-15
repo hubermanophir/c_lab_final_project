@@ -38,6 +38,7 @@ void add_to_list(LinkedList *list, void *data) {
   Node *node = (Node *)malloc(sizeof(Node));
   node->data = data;
   node->next = NULL;
+  node->prev = NULL;
 
   if (list->head == NULL) {
     list->head = node;
