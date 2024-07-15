@@ -14,45 +14,49 @@ char *preprocessor(char *file_name) {
   LineType line_type;
 
   Hashtable *macros = create_hashtable(100);
+
   char *as_file_name = get_file_name(file_name, ".as");
   char *an_file_name = get_file_name(file_name, ".an");
-  printf("as file:%s \n", as_file_name);
   as_file = fopen(as_file_name, "r");
   an_file = fopen(an_file_name, "w");
+
   if (!as_file || !an_file) {
+    free(as_file_name);
+    free(an_file_name);
+    free_macro_hashtable(macros);
     return NULL;
   }
 
   while (fgets(line, MAX_LINE_LENGTH, as_file)) {
+  
     line_type = get_line_type(line, macros, current_macro);
+
     switch (line_type) {
     case MACRO_DECLARATION: {
-      current_macro = create_macro();
-      add_macro_name(current_macro, "MACRO");
-      put_hashtable(macros, "MACRO", current_macro);
+      printf("MACRO_DECLARATION %s\n", line);
       break;
     }
     case MACRO_END: {
+      printf("MACRO_END %s\n", line);
 
       break;
     }
     case MACRO_CALL: {
-      output_macro((Macro *)get_hashtable(macros, current_macro->name),
-                   an_file);
+      printf("MACRO_CALL %s\n", line);
 
       break;
     }
     case CODE_LINE: {
+      printf("CODE_LINE %s\n", line);
+
       break;
     }
     }
   }
   fclose(an_file);
   fclose(as_file);
-
   free_macro_hashtable(macros);
-
   free(as_file_name);
-  free(an_file_name);
+
   return an_file_name;
 }

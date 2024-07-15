@@ -43,7 +43,7 @@ Hashtable *create_hashtable(int size) {
 }
 
 void put_hashtable(Hashtable *hashtable, char *key, void *value) {
-  int index = hash(key, hashtable->size);
+  int index = hash(key, hashtable->size++);
 
   HashEntry *entry = (HashEntry *)malloc(sizeof(HashEntry));
 
@@ -68,6 +68,8 @@ void *get_hashtable(Hashtable *hashtable, char *key) {
 
   return NULL;
 }
+
+
 
 void free_macro_hashtable(Hashtable *hashtable) {
   int i;

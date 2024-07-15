@@ -1,9 +1,10 @@
+#include "../../header_files/data_structures/hashtable.h"
 #include "../../header_files/global.h"
 #include "../../header_files/preprocessor/Macro.h"
-#include "../../header_files/data_structures/hashtable.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef enum LineType {
   MACRO_DECLARATION,
   MACRO_END,
@@ -99,10 +100,13 @@ void check_macro_isolated_line(char *line, char *name) {
   }
 }
 
+
 LineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
+  int is_macro_in_line = 0;
+  char **existing_names;
 
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
@@ -113,7 +117,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
 
   existing_macro = (Macro *)get_hashtable(existing_macros, line);
   /*implement!!!!*/
-  if (existing_macro) {
+  if (existing_macro && is_macro_in_line) {
     return MACRO_CALL;
   }
 
