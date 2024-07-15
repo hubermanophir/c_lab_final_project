@@ -44,13 +44,64 @@ Hashtable *create_hashtable(int size) {
 
 void put_hashtable(Hashtable *hashtable, char *key, void *value) {
   int index = hash(key, hashtable->size);
+  HashEntry *entry;
+  HashEntry *current = hashtable->table[index];
+  if (current == NULL) {
+    entry = (HashEntry *)malloc(sizeof(HashEntry));
+    entry->key = key;
+    entry->value = value;
+    entry->next = NULL;
+    hashtable->table[index] = entry;
+    printf("here");
+  } else {
+    while (current->next) {
+      current = current->next;
+    }
+    entry = (HashEntry *)malloc(sizeof(HashEntry));
+    entry->key = key;
+    entry->value = value;
+    entry->next = NULL;
+    current->next = entry;
+  }
+}
 
-  HashEntry *entry = (HashEntry *)malloc(sizeof(HashEntry));
+int get_existing_macro_names(Hashtable *hashtable, char ***existing_names) {
+  int capacity = hashtable->size;
+  int count = 0, i;
 
-  entry->key = key;
-  entry->value = value;
-  entry->next = hashtable->table[index];
-  hashtable->table[index] = entry;
+  *existing_names = (char **)malloc(sizeof(char *) * capacity);
+
+  for (i = 0; i < hashtable->size; i++) {
+    HashEntry *entry = hashtable->table[i];
+
+    while (entry) {
+      if (count == capacity) {
+        capacity *= 2;
+        *existing_names =
+            (char **)realloc(*existing_names, sizeof(char *) * capacity);
+      }
+      (*existing_names)[count] = ((Macro *)(entry->value))->name;
+      count++;
+      entry = entry->next;
+    }
+  }
+
+  return count;
+}
+
+void *get_macro_hashtable(Hashtable *hashtable, char *key) {
+  int hashed_key = hash(key, hashtable->size);
+  HashEntry *entry = hashtable->table[hashed_key];
+
+  while (entry) {
+    if (strcmp(((Macro *)(entry->value))->name, key) == 0) {
+      return entry->value;
+    }
+
+    entry = entry->next;
+  }
+
+  return NULL;
 }
 
 void *get_hashtable(Hashtable *hashtable, char *key) {

@@ -100,12 +100,30 @@ void check_macro_isolated_line(char *line, char *name) {
   }
 }
 
+void print_names(char **names, int size) {
+  int i;
+  for (i = 0; i < size; i++) {
+    printf("names[i] = %s, i:%d\n", names[i], i);
+  }
+}
+
+int get_is_existing_macro_in_line(char *line, char **existing_names, int size) {
+  int i;
+  for (i = 0; i < size; i++) {
+    if (strstr(line, existing_names[i])) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 LineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
   int is_macro_in_line = 0;
   char **existing_names;
+  int size;
   int i;
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
@@ -114,10 +132,14 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
     SKIP_WHITESPACE(line);
   }
 
-  existing_macro = (Macro *)get_hashtable(existing_macros, line);
-  /*implement!!!!*/
-  if (existing_macro && is_macro_in_line) {
-    return MACRO_CALL;
+  size = get_existing_macro_names(existing_macros, &existing_names);
+  is_macro_in_line = get_is_existing_macro_in_line(line, existing_names, size);
+  free(existing_names);
+  if (is_macro_in_line) {
+    existing_macro = (Macro *)get_macro_hashtable(existing_macros, line);
+    if (existing_macro) {
+      return MACRO_CALL;
+    }
   }
 
   tok = strstr(line, "endmacr");

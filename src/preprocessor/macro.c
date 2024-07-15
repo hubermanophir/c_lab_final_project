@@ -41,6 +41,7 @@ void output_macro(Macro *macro, FILE *output) {
   Node *current = macro->lines->head;
   while (current) {
     fputs((char *)current->data, output);
+    fputs("\n", output);
     current = current->next;
   }
 }

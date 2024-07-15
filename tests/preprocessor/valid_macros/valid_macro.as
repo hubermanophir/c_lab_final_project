@@ -6,11 +6,16 @@ LOOP:   prn #48
         endmacr
         lea STR, r6       
         inc r6
+        macr second_macro                   
+        lea STR, r6       
+        inc r6
+        endmacr
         mov *r6,K
         sub r1, r4
         m_macr
         dec K
         jmp LOOP
+        second_macro
 END:    stop
 STR:    .string “abcd”
 LIST:   .data 6, -9
