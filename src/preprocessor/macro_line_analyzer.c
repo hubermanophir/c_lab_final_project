@@ -1,5 +1,6 @@
 #include "../../header_files/global.h"
 #include "../../header_files/preprocessor/Macro.h"
+#include "../../header_files/data_structures/hashtable.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

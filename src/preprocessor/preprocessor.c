@@ -27,7 +27,9 @@ char *preprocessor(char *file_name) {
     line_type = get_line_type(line, macros, current_macro);
     switch (line_type) {
     case MACRO_DECLARATION: {
-
+      current_macro = create_macro();
+      add_macro_name(current_macro, "MACRO");
+      put_hashtable(macros, "MACRO", current_macro);
       break;
     }
     case MACRO_END: {
@@ -35,6 +37,8 @@ char *preprocessor(char *file_name) {
       break;
     }
     case MACRO_CALL: {
+      output_macro((Macro *)get_hashtable(macros, current_macro->name),
+                   an_file);
 
       break;
     }
@@ -46,7 +50,7 @@ char *preprocessor(char *file_name) {
   fclose(an_file);
   fclose(as_file);
   if (macros) {
-    free_hashtable(macros);
+    free_macro_hashtable(macros);
   }
   free(as_file_name);
   free(an_file_name);

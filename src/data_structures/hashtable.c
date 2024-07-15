@@ -1,3 +1,4 @@
+#include "../../header_files/preprocessor/macro.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,6 +67,23 @@ void *get_hashtable(Hashtable *hashtable, char *key) {
   }
 
   return NULL;
+}
+
+void free_macro_hashtable(Hashtable *hashtable) {
+  int i;
+  for (i = 0; i < hashtable->size; i++) {
+    HashEntry *entry = hashtable->table[i];
+
+    while (entry) {
+      HashEntry *next = entry->next;
+      free_macro((Macro *)(entry->value));
+      free(entry);
+      entry = next;
+    }
+  }
+
+  free(hashtable->table);
+  free(hashtable);
 }
 
 void free_hashtable(Hashtable *hashtable) {

@@ -18,4 +18,6 @@ void add_to_list(LinkedList *list, void *data);
 
 void free_list(LinkedList *list);
 
+void print_list(LinkedList *list);
+
 #endif

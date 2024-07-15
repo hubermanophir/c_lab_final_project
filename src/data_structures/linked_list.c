@@ -12,7 +12,7 @@ typedef struct LinkedList {
   Node *tail;
 } LinkedList;
 
-LinkedList * init_list() {
+LinkedList *init_list() {
   LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
   list->head = NULL;
   list->tail = NULL;
@@ -26,6 +26,7 @@ void free_list(LinkedList *list) {
 
   while (current != NULL) {
     next = current->next;
+    free(current->data);
     free(current);
     current = next;
   }

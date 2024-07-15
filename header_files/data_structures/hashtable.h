@@ -1,6 +1,5 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-
 typedef struct HashEntry {
   char *key;
   void *value;
@@ -19,5 +18,7 @@ void put_hashtable(Hashtable *hashtable, char *key, void *value);
 void *get_hashtable(Hashtable *hashtable, char *key);
 
 void free_hashtable(Hashtable *hashtable);
+
+void free_macro_hashtable(Hashtable *hashtable);
 
 #endif
