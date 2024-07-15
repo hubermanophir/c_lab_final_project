@@ -62,9 +62,9 @@ char *preprocessor(char *file_name) {
   }
   fclose(an_file);
   fclose(as_file);
-  if (macros) {
-    free_macro_hashtable(macros);
-  }
+
+  free_macro_hashtable(macros);
+
   free(as_file_name);
   free(an_file_name);
   return an_file_name;
