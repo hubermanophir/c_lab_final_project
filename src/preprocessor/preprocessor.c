@@ -34,6 +34,7 @@ char *preprocessor(char *file_name) {
 
     switch (line_type) {
     case MACRO_DECLARATION: {
+      printf("MACRO_DECLARATION %s\n", line);
       tok = strstr(line, "macr");
       tok += 4;
       SKIP_WHITESPACE(tok);
@@ -44,14 +45,20 @@ char *preprocessor(char *file_name) {
       break;
     }
     case MACRO_END: {
+      printf("MACRO_END %s\n", line);
+
       current_macro = NULL;
       break;
     }
     case MACRO_CALL: {
+      printf("MACRO_CALL %s\n", line);
+
       output_macro((Macro *)get_hashtable(macros, line), an_file);
       break;
     }
     case CODE_LINE: {
+      printf("CODE_LINE %s\n", line);
+
       if (current_macro) {
         append_macro_line(current_macro, line);
       } else {

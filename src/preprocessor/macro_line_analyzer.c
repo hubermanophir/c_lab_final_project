@@ -100,14 +100,13 @@ void check_macro_isolated_line(char *line, char *name) {
   }
 }
 
-
 LineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
   char *tok;
   Macro *existing_macro;
   int is_macro_in_line = 0;
   char **existing_names;
-
+  int i;
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
@@ -123,25 +122,31 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
 
   tok = strstr(line, "endmacr");
   if (tok) {
-    line = tok;
-    line += 7;
-    SKIP_WHITESPACE(line);
+    i = strncmp(line, "endmacr", 7);
+    if (!i) {
+      line = tok;
+      line += 7;
+      SKIP_WHITESPACE(line);
 
-    /*Nothing other then macro end*/
-    if (*line == '\0') {
-      return MACRO_END;
-    } else {
-      printf("Error: Invalid macro end\n");
-      exit(1);
+      /*Nothing other then macro end*/
+      if (*line == '\0') {
+        return MACRO_END;
+      } else {
+        printf("Error: Invalid macro end\n");
+        exit(1);
+      }
     }
   }
   tok = strstr(line, "macr");
   if (tok) {
-    line = tok;
-    line += 4;
-    SKIP_WHITESPACE(line);
-    handle_invalid_name(is_valid_macro_name(line, existing_macros), line);
-    return MACRO_DECLARATION;
+    i = strncmp(line, "macr", 4);
+    if (!i) {
+      line = tok;
+      line += 4;
+      SKIP_WHITESPACE(line);
+      handle_invalid_name(is_valid_macro_name(line, existing_macros), line);
+      return MACRO_DECLARATION;
+    }
   }
 
   return CODE_LINE;
