@@ -9,7 +9,8 @@ typedef enum LineType {
   MACRO_DECLARATION,
   MACRO_END,
   MACRO_CALL,
-  CODE_LINE
+  CODE_LINE,
+  INVALID
 } LineType;
 
 LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro);

@@ -24,34 +24,34 @@ typedef enum InvalidMacroType {
   VALID
 } InvalidMacroType;
 
-void handle_invalid_name(InvalidMacroType type, char *name) {
+LineType handle_invalid_name(InvalidMacroType type, char *name) {
   switch (type) {
   case DUPLICATE_DECLARATION:
     printf("Error: Duplicate macro declaration: %s\n", name);
-    exit(1);
-    break;
+    return INVALID;
+
   case INVALID_NAME:
     printf("Error: Invalid macro name: %s\n", name);
-    exit(1);
-    break;
+    return INVALID;
+
   case OPT_NAME:
     printf("Error: Macro name is an opcode: %s\n", name);
-    exit(1);
-    break;
+    return INVALID;
+
   case DIRECTIVE_NAME:
     printf("Error: Macro name is a directive: %s\n", name);
-    exit(1);
-    break;
+    return INVALID;
+
   case EXISTING:
     printf("Error: Macro name already exists: %s\n", name);
-    exit(1);
-    break;
+    return INVALID;
+
   case LENGTH_ERROR:
     printf("Error: Macro name is too long: %s\n", name);
-    exit(1);
-    break;
+    return INVALID;
+
   default:
-    break;
+    return MACRO_DECLARATION;
   }
 }
 
@@ -94,11 +94,12 @@ static InvalidMacroType is_valid_macro_name(char *name,
   return VALID;
 }
 
-void check_macro_isolated_line(char *line, char *name) {
+int check_macro_isolated_line(char *line, char *name) {
   if (strncmp(line, name, strlen(name)) || line[strlen(name)] != '\0') {
     printf("Error: Macro call is not isolated\n");
-    exit(1);
+    return 0;
   }
+  return 1;
 }
 
 void print_names(char **names, int size) {
@@ -122,7 +123,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
   char *tok, *is_macro_in_line;
   Macro *existing_macro;
-  int size, i;
+  int size, i, is_valid;
   char **existing_names;
 
   /*clean line \n and trailing whitespace*/
@@ -136,7 +137,10 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
   is_macro_in_line = get_macro_in_line(line, existing_names, size);
   free(existing_names);
   if (is_macro_in_line != NULL) {
-    check_macro_isolated_line(line, is_macro_in_line);
+    is_valid = check_macro_isolated_line(line, is_macro_in_line);
+    if (!is_valid) {
+      return INVALID;
+    }
     existing_macro = (Macro *)get_macro_hashtable(existing_macros, line);
     if (existing_macro) {
       return MACRO_CALL;
@@ -156,7 +160,7 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
         return MACRO_END;
       } else {
         printf("Error: Invalid macro end\n");
-        exit(1);
+        return INVALID;
       }
     }
   }
@@ -167,8 +171,8 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
       line = tok;
       line += 4;
       SKIP_WHITESPACE(line);
-      handle_invalid_name(is_valid_macro_name(line, existing_macros), line);
-      return MACRO_DECLARATION;
+      return handle_invalid_name(is_valid_macro_name(line, existing_macros),
+                                 line);
     }
   }
 

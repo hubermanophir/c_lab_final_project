@@ -66,6 +66,11 @@ char *preprocessor(char *file_name) {
 
       break;
     }
+    case INVALID: {
+      fclose(an_file);
+      remove(an_file_name);
+      exit(1);
+    }
     }
   }
 
