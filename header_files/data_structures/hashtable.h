@@ -15,11 +15,7 @@ Hashtable *create_hashtable(int size);
 
 void put_hashtable(Hashtable *hashtable, char *key, void *value);
 
-void *get_hashtable(Hashtable *hashtable, char *key);
-
-void free_hashtable(Hashtable *hashtable);
-
-void free_macro_hashtable(Hashtable *hashtable);
+void free_hashtable(Hashtable *hashtable, void (*free_value)(void *));
 
 int get_existing_macro_names(Hashtable *hashtable, char ***existing_names);
 

@@ -103,45 +103,14 @@ void *get_macro_hashtable(Hashtable *hashtable, char *key) {
   return NULL;
 }
 
-void *get_hashtable(Hashtable *hashtable, char *key) {
-  int hashed_key = hash(key, hashtable->size);
-
-  HashEntry *entry = hashtable->table[hashed_key];
-
-  while (entry) {
-    if (strcmp(entry->key, key) == 0) {
-      return entry->value;
-    }
-
-    entry = entry->next;
-  }
-
-  return NULL;
-}
-
-void free_macro_hashtable(Hashtable *hashtable) {
+void free_hashtable(Hashtable *hashtable, void (*free_value)(void *)) {
   int i;
   for (i = 0; i < hashtable->size; i++) {
     HashEntry *entry = hashtable->table[i];
 
     while (entry) {
       HashEntry *next = entry->next;
-      free_macro((Macro *)entry->value);
-      free(entry);
-      entry = next;
-    }
-  }
-
-  free(hashtable->table);
-  free(hashtable);
-}
-void free_hashtable(Hashtable *hashtable) {
-  int i;
-  for (i = 0; i < hashtable->size; i++) {
-    HashEntry *entry = hashtable->table[i];
-
-    while (entry) {
-      HashEntry *next = entry->next;
+      free_value(entry->value);
       free(entry);
       entry = next;
     }

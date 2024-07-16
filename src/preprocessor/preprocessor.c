@@ -24,7 +24,7 @@ char *preprocessor(char *file_name) {
   if (!as_file || !an_file) {
     free(as_file_name);
     free(an_file_name);
-    free_macro_hashtable(macros);
+    free_hashtable(macros, (void (*)(void *))free_macro);
     return NULL;
   }
 
@@ -77,7 +77,7 @@ char *preprocessor(char *file_name) {
   /*close files and free memory*/
   fclose(an_file);
   fclose(as_file);
-  free_macro_hashtable(macros);
+  free_hashtable(macros, (void (*)(void *))free_macro);
   free(as_file_name);
 
   return an_file_name;
