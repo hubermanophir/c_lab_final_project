@@ -12,7 +12,7 @@ char *preprocessor(char *file_name) {
   char *tok;
   FILE *as_file, *an_file;
   Macro *current_macro = NULL;
-  LineType line_type;
+  MacroLineType line_type;
 
   Hashtable *macros = create_hashtable(100);
 

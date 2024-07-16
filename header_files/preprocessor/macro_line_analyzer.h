@@ -5,14 +5,14 @@
 #include "../../header_files/preprocessor/macro.h"
 #include "../../header_files/preprocessor/preprocessor.h"
 
-typedef enum LineType {
+typedef enum MacroLineType {
   MACRO_DECLARATION,
   MACRO_END,
   MACRO_CALL,
   CODE_LINE,
   INVALID
-} LineType;
+} MacroLineType;
 
-LineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro);
+MacroLineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro);
 
 #endif

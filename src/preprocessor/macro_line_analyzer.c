@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum LineType {
+typedef enum MacroLineType {
   MACRO_DECLARATION,
   MACRO_END,
   MACRO_CALL,
   CODE_LINE,
   INVALID
-} LineType;
+} MacroLineType;
 
 typedef enum InvalidMacroType {
   DUPLICATE_DECLARATION,
@@ -24,7 +24,7 @@ typedef enum InvalidMacroType {
   VALID
 } InvalidMacroType;
 
-LineType handle_invalid_name(InvalidMacroType type, char *name) {
+MacroLineType handle_invalid_name(InvalidMacroType type, char *name) {
   switch (type) {
   case DUPLICATE_DECLARATION:
     printf("Error: Duplicate macro declaration: %s\n", name);
@@ -119,7 +119,7 @@ char *get_macro_in_line(char *line, char **existing_names, int size) {
   return NULL;
 }
 
-LineType get_line_type(char *line, Hashtable *existing_macros,
+MacroLineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
   char *tok, *is_macro_in_line;
   Macro *existing_macro;
