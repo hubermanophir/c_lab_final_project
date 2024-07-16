@@ -12,6 +12,11 @@ typedef struct LinkedList {
   Node *tail;
 } LinkedList;
 
+/**
+ * @brief Initialize list
+ * 
+ * @return LinkedList* 
+ */
 LinkedList *init_list();
 
 /**
@@ -20,7 +25,7 @@ LinkedList *init_list();
  * @param list
  * @param data
  */
-void add_to_list(LinkedList *list, void *data);
+void append_to_list_end(LinkedList *list, void *data);
 
 /**
  * @brief Free list from memory

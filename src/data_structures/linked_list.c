@@ -34,7 +34,7 @@ void free_list(LinkedList *list, void (*free_data)(void *)) {
   free(list);
 }
 
-void add_to_list(LinkedList *list, void *data) {
+void append_to_list_end(LinkedList *list, void *data) {
   Node *node = (Node *)malloc(sizeof(Node));
   node->data = data;
   node->next = NULL;

@@ -26,7 +26,7 @@ void append_macro_line(Macro *macro, char *line) {
   char *line_copy = (char *)malloc(strlen(line) + 1);
   if (line_copy != NULL) {
     strcpy(line_copy, line);
-    add_to_list(macro->lines, line_copy);
+    append_to_list_end(macro->lines, line_copy);
   } else {
     exit(1);
   }
