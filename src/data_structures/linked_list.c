@@ -20,13 +20,13 @@ LinkedList *init_list() {
   return list;
 }
 
-void free_list(LinkedList *list) {
+void free_list(LinkedList *list, void (*free_data)(void *)) {
   Node *current = list->head;
   Node *next;
 
   while (current != NULL) {
     next = current->next;
-    free(current->data);
+    free_data(current->data);
     free(current);
     current = next;
   }

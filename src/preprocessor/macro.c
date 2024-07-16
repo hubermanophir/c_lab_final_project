@@ -32,7 +32,7 @@ void append_macro_line(Macro *macro, char *line) {
   }
 }
 void free_macro(Macro *macro) {
-  free_list((macro->lines));
+  free_list((macro->lines), free);
   free(macro->name);
   free(macro);
 }

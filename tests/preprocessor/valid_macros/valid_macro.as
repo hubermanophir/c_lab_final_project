@@ -14,6 +14,7 @@ LOOP:   prn #48
         sub r1, r4
         m_macr
         dec K
+        
         jmp LOOP
         second_macro
 END:    stop
