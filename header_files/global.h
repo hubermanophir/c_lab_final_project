@@ -16,6 +16,8 @@
 
 #define MAX_DATA_SIZE 100
 
+#define MAX_LABEL_LENGTH 31
+
 typedef enum Opcode {
   MOV,
   CMP,
@@ -62,21 +64,22 @@ void trim_trailing_whitespace(char *str);
 
 /**
  * @brief makes copy of str
- * 
- * @param str 
- * @return copy of str 
+ *
+ * @param str
+ * @return copy of str
  */
 char *make_char_copy(char *str);
 
 typedef struct Line_obj {
   char error[150];
-  char label[100];
+  char label[MAX_LABEL_LENGTH];
+  int line_number;
   enum { EMPTY, COMMENT, DIRECTIVE, INSTRUCTION } LineType;
   union {
     struct {
       Directive directive_option;
       union {
-        char *label;
+        char label[MAX_LABEL_LENGTH];
         char *str;
         struct {
           int numbers[MAX_DATA_SIZE];
@@ -86,12 +89,18 @@ typedef struct Line_obj {
     } directive;
     struct {
       Opcode opcode_option;
-      struct {
+      union {
         int register_index;
-        char *label;
+        char label[MAX_LABEL_LENGTH];
         int immediate;
       } operands[2];
-      enum { IMMEDIATE, DIRECT, INDIRECT, REGISTER, NONE } addressing[2];
+      enum {
+        IMMEDIATE,
+        DIRECT,
+        INDIRECT_ACCUMULATE,
+        DIRECT_ACCUMULATE,
+        NONE
+      } addressing[2];
       int length;
     } instruction;
   } test;

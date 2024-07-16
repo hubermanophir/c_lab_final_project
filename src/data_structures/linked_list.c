@@ -14,6 +14,10 @@ typedef struct LinkedList {
 
 LinkedList *init_list() {
   LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
+  if (list == NULL) {
+    fprintf(stderr, "Memory allocation failed\n");
+    exit(1);
+  }
   list->head = NULL;
   list->tail = NULL;
 
@@ -36,6 +40,10 @@ void free_list(LinkedList *list, void (*free_data)(void *)) {
 
 void append_to_list_end(LinkedList *list, void *data) {
   Node *node = (Node *)malloc(sizeof(Node));
+  if (node == NULL) {
+    fprintf(stderr, "Memory allocation failed\n");
+    exit(1);
+  }
   node->data = data;
   node->next = NULL;
   node->prev = NULL;

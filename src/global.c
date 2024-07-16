@@ -2,7 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+/**
+ * @brief Get the opcode from string
+ * 
+ * @param opcode 
+ * @return Opcode 
+ */
 Opcode get_opcode_from_string(char *opcode) {
 
   if (strcmp(opcode, "mov") == 0) {

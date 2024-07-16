@@ -28,6 +28,10 @@ int hash(char *key, int size) {
 Hashtable *create_hashtable(int size) {
   int i;
   Hashtable *hashtable = (Hashtable *)malloc(sizeof(Hashtable));
+  if (hashtable == NULL) {
+    printf("Memory allocation failed\n");
+    exit(1);
+  }
   hashtable->size = size;
   hashtable->table = (HashEntry **)malloc(sizeof(HashEntry *) * size);
   if (hashtable->table == NULL) {
@@ -72,7 +76,7 @@ void free_hashtable(Hashtable *hashtable, void (*free_value)(void *)) {
     while (entry) {
       HashEntry *next = entry->next;
       free_value(entry->value);
-      free(entry); 
+      free(entry);
       entry = next;
     }
   }
