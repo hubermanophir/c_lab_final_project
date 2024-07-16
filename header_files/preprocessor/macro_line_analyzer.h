@@ -13,6 +13,14 @@ typedef enum MacroLineType {
   INVALID
 } MacroLineType;
 
+/**
+ * @brief Analyzing the line to determine the type of line
+ * 
+ * @param line 
+ * @param existing_macros 
+ * @param current_macro 
+ * @return MacroLineType 
+ */
 MacroLineType get_line_type(char *line, Hashtable *existing_macros, Macro *current_macro);
 
 #endif

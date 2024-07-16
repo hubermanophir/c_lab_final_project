@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 Opcode get_opcode_from_string(char *opcode) {
 
   if (strcmp(opcode, "mov") == 0) {
@@ -40,6 +41,7 @@ Opcode get_opcode_from_string(char *opcode) {
   return -1;
 }
 
+
 Directive get_directive_from_string(char *directive) {
   if (strcmp(directive, ".data") == 0) {
     return DATA;
@@ -52,6 +54,7 @@ Directive get_directive_from_string(char *directive) {
   }
   return -1;
 }
+
 
 void trim_trailing_whitespace(char *str) {
   int len = strlen(str);

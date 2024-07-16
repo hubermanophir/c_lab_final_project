@@ -24,6 +24,13 @@ typedef enum InvalidMacroType {
   VALID
 } InvalidMacroType;
 
+/**
+ * @brief Print error by the invalid type and return invalid if indeed invalid
+ * 
+ * @param type 
+ * @param name 
+ * @return MacroLineType 
+ */
 MacroLineType handle_invalid_name(InvalidMacroType type, char *name) {
   switch (type) {
   case DUPLICATE_DECLARATION:
@@ -55,6 +62,12 @@ MacroLineType handle_invalid_name(InvalidMacroType type, char *name) {
   }
 }
 
+/**
+ * @brief check if the name contains invalid chars ,; \t\n\v\f
+ * 
+ * @param test_str 
+ * @return int return 1 if invalid 0 if valid
+ */
 static int does_contain_invalid_chars(char *test_str) {
   char *temp;
   temp = test_str;
@@ -72,6 +85,13 @@ static int does_contain_invalid_chars(char *test_str) {
   return temp ? 1 : 0;
 }
 
+/**
+ * @brief check for various invalid macro names
+ * 
+ * @param name 
+ * @param existing_macros 
+ * @return InvalidMacroType 
+ */
 static InvalidMacroType is_valid_macro_name(char *name,
                                             Hashtable *existing_macros) {
   if (get_macro_hashtable(existing_macros, name)) {
@@ -94,6 +114,13 @@ static InvalidMacroType is_valid_macro_name(char *name,
   return VALID;
 }
 
+/**
+ * @brief checks that the macro call is isolated
+ * 
+ * @param line 
+ * @param name 
+ * @return int return 1 if isolated and 0 if not
+ */
 int check_macro_isolated_line(char *line, char *name) {
   if (strncmp(line, name, strlen(name)) || line[strlen(name)] != '\0') {
     printf("Error: Macro call is not isolated\n");
@@ -102,13 +129,14 @@ int check_macro_isolated_line(char *line, char *name) {
   return 1;
 }
 
-void print_names(char **names, int size) {
-  int i;
-  for (i = 0; i < size; i++) {
-    printf("names[i] = %s, i:%d\n", names[i], i);
-  }
-}
-
+/**
+ * @brief Trying to extract the macro name from the line
+ * 
+ * @param line 
+ * @param existing_names 
+ * @param size 
+ * @return char* if exists and NULL if doesn't exist
+ */
 char *get_macro_in_line(char *line, char **existing_names, int size) {
   int i;
   for (i = 0; i < size; i++) {
