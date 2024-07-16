@@ -64,6 +64,25 @@ void put_hashtable(Hashtable *hashtable, char *key, void *value) {
   }
 }
 
+void free_hashtable(Hashtable *hashtable, void (*free_value)(void *)) {
+  int i;
+  for (i = 0; i < hashtable->size; i++) {
+    HashEntry *entry = hashtable->table[i];
+
+    while (entry) {
+      HashEntry *next = entry->next;
+      free_value(entry->value);
+      free(entry); 
+      entry = next;
+    }
+  }
+
+  free(hashtable->table);
+  free(hashtable);
+}
+
+/*Macro Hashtable methods*/
+
 int get_existing_macro_names(Hashtable *hashtable, char ***existing_names) {
   int capacity = hashtable->size;
   int count = 0, i;
@@ -103,19 +122,4 @@ void *get_macro_hashtable(Hashtable *hashtable, char *key) {
   return NULL;
 }
 
-void free_hashtable(Hashtable *hashtable, void (*free_value)(void *)) {
-  int i;
-  for (i = 0; i < hashtable->size; i++) {
-    HashEntry *entry = hashtable->table[i];
-
-    while (entry) {
-      HashEntry *next = entry->next;
-      free_value(entry->value);
-      free(entry);
-      entry = next;
-    }
-  }
-
-  free(hashtable->table);
-  free(hashtable);
-}
+/*End of Macro Hashtable methods*/
