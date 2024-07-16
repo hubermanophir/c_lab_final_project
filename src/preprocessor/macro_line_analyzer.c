@@ -9,7 +9,8 @@ typedef enum LineType {
   MACRO_DECLARATION,
   MACRO_END,
   MACRO_CALL,
-  CODE_LINE
+  CODE_LINE,
+  INVALID
 } LineType;
 
 typedef enum InvalidMacroType {
@@ -73,7 +74,7 @@ static int does_contain_invalid_chars(char *test_str) {
 
 static InvalidMacroType is_valid_macro_name(char *name,
                                             Hashtable *existing_macros) {
-  if (get_hashtable(existing_macros, name)) {
+  if (get_macro_hashtable(existing_macros, name)) {
     return EXISTING;
   }
   if (get_opcode_from_string(name) != -1) {
@@ -95,7 +96,7 @@ static InvalidMacroType is_valid_macro_name(char *name,
 
 void check_macro_isolated_line(char *line, char *name) {
   if (strncmp(line, name, strlen(name)) || line[strlen(name)] != '\0') {
-    printf("Error: Macro name is not isolated\n");
+    printf("Error: Macro call is not isolated\n");
     exit(1);
   }
 }
@@ -107,24 +108,23 @@ void print_names(char **names, int size) {
   }
 }
 
-int get_is_existing_macro_in_line(char *line, char **existing_names, int size) {
+char *get_macro_in_line(char *line, char **existing_names, int size) {
   int i;
   for (i = 0; i < size; i++) {
     if (strstr(line, existing_names[i])) {
-      return 1;
+      return existing_names[i];
     }
   }
-  return 0;
+  return NULL;
 }
 
 LineType get_line_type(char *line, Hashtable *existing_macros,
                        Macro *current_macro) {
-  char *tok;
+  char *tok, *is_macro_in_line;
   Macro *existing_macro;
-  int is_macro_in_line = 0;
+  int size, i;
   char **existing_names;
-  int size;
-  int i;
+
   /*clean line \n and trailing whitespace*/
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
@@ -133,9 +133,10 @@ LineType get_line_type(char *line, Hashtable *existing_macros,
   }
 
   size = get_existing_macro_names(existing_macros, &existing_names);
-  is_macro_in_line = get_is_existing_macro_in_line(line, existing_names, size);
+  is_macro_in_line = get_macro_in_line(line, existing_names, size);
   free(existing_names);
-  if (is_macro_in_line) {
+  if (is_macro_in_line != NULL) {
+    check_macro_isolated_line(line, is_macro_in_line);
     existing_macro = (Macro *)get_macro_hashtable(existing_macros, line);
     if (existing_macro) {
       return MACRO_CALL;

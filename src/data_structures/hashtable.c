@@ -52,7 +52,6 @@ void put_hashtable(Hashtable *hashtable, char *key, void *value) {
     entry->value = value;
     entry->next = NULL;
     hashtable->table[index] = entry;
-    printf("here");
   } else {
     while (current->next) {
       current = current->next;

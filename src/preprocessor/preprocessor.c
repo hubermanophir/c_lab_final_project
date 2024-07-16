@@ -68,6 +68,8 @@ char *preprocessor(char *file_name) {
     }
     }
   }
+
+  /*close files and free memory*/
   fclose(an_file);
   fclose(as_file);
   free_macro_hashtable(macros);
