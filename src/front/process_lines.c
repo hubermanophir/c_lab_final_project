@@ -6,7 +6,7 @@
 #include <string.h>
 
 /**
- * @brief separate the line into tokens by space chars
+ * @brief separate the line into tokens by space chars and commas
  *
  * @param line
  * @return char**
@@ -19,19 +19,35 @@ Tokens_Obj tokenize(char *line) {
   if (*line == '\n') {
     return tokens_obj;
   }
+
   do {
+    if (*line == ',') {
+      tokens_obj.tokens[size++] = ",";
+      line++;
+      SKIP_WHITESPACE(line);
+      continue;
+    }
     tokens_obj.tokens[size++] = line;
-    tok = strpbrk(line, SPACE_CHARS);
+    tok = strpbrk(line, SPACE_CHARS ",");
     if (tok) {
-      *tok = '\0';
-      tok++;
-      SKIP_WHITESPACE(tok);
-      line = tok;
+      if (*tok == ',') {
+        *tok = '\0';
+        tok++;
+        tokens_obj.tokens[size++] = ",";
+        SKIP_WHITESPACE(tok);
+        line = tok;
+      } else {
+        *tok = '\0';
+        tok++;
+        SKIP_WHITESPACE(tok);
+        line = tok;
+      }
     } else {
       break;
     }
 
-  } while (1);
+  } while (*line && size < MAX_LINE_LENGTH);
+
   tokens_obj.size = size;
   return tokens_obj;
 }
@@ -70,11 +86,14 @@ static Line_obj *process_single_line(char *line) {
   Directive directive;
   Opcode opcode;
   int is_directive, is_opcode;
+  int i;
   line_obj = (Line_obj *)malloc(sizeof(Line_obj));
   if (line_obj == NULL) {
     fprintf(stderr, "Memory allocation failed\n");
     exit(1);
   }
+  strcpy(line_obj->error, "");
+
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
     trim_trailing_whitespace(line);
@@ -82,18 +101,15 @@ static Line_obj *process_single_line(char *line) {
   }
 
   if (is_comment_line(line)) {
-    printf("comment line line: %s\n", line);
     line_obj->LineType = COMMENT;
     return line_obj;
   }
   if (is_empty_line(line)) {
-    printf("empty line line: %s\n", line);
     line_obj->LineType = EMPTY;
     return line_obj;
   }
 
   tokens_obj = tokenize(line);
-
   is_directive = is_directive_in_tokens(tokens_obj);
   is_opcode = is_opcode_in_tokens(tokens_obj);
 
@@ -102,16 +118,23 @@ static Line_obj *process_single_line(char *line) {
     line_obj->LineType = ERROR;
     return line_obj;
   } else if (is_directive) {
+    /*
     printf("directive line line: %s\n", line);
+    */
     line_obj->LineType = DIRECTIVE;
     return line_obj;
 
   } else if (is_opcode) {
+    /*
     printf("instruction line line: %s\n", line);
+    */
     line_obj->LineType = INSTRUCTION;
+    validate_instruction_line(&tokens_obj, line_obj);
     return line_obj;
   }
+  /*
   printf("Invalid line: %s\n", line);
+  */
   strcpy(line_obj->error, "Error: File non of the allowed types: comment, "
                           "empty, directive, instruction");
   line_obj->LineType = ERROR;

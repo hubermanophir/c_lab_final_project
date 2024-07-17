@@ -9,7 +9,7 @@
  * @param tokens_obj
  * @return int 1 if valid 0 if not
  */
-void validate_instruction_line(Tokens_Obj tokens_obj, Line_obj line_obj);
+void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj);
 
 /**
  * @brief Checks if directive line is valid if not update error message
@@ -17,7 +17,7 @@ void validate_instruction_line(Tokens_Obj tokens_obj, Line_obj line_obj);
  * @param tokens_obj
  * @return int 1 if valid 0 if not
  */
-void validate_directive_line(Tokens_Obj tokens_obj, Line_obj line_obj);
+void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj);
 
 /**
  * @brief Checks if comment line

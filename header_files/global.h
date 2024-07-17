@@ -12,6 +12,8 @@
 
 #define SPACE_CHARS " \t\v\f"
 
+#define TOKENIZE_CHARS ",\t\v\f "
+
 #define INVALID_NAME_CHARS ",; \t\n\v\f"
 
 #define INVALID_LABEL_CHARS ",;#$%^!@&*()+=- \t\n\v\f"
@@ -83,7 +85,7 @@ typedef enum AddressingMode {
 } AddressingMode;
 
 typedef struct Line_obj {
-  char error[150];
+  char error[MAX_DATA_SIZE];
   char label[MAX_LABEL_LENGTH];
   int line_number;
   enum { EMPTY, COMMENT, DIRECTIVE, INSTRUCTION, ERROR } LineType;
