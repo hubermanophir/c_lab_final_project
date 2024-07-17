@@ -10,13 +10,17 @@
     (ptr)++;                                                                   \
   }
 
-#define SPACE_CHARS " \t\n\v\f"
+#define SPACE_CHARS " \t\v\f"
 
 #define INVALID_NAME_CHARS ",; \t\n\v\f"
+
+#define INVALID_LABEL_CHARS ",;#$%^!@&*()+=- \t\n\v\f"
 
 #define MAX_DATA_SIZE 100
 
 #define MAX_LABEL_LENGTH 31
+
+#define MIN_VALUE -32768
 
 typedef enum Opcode {
   MOV,
@@ -70,17 +74,25 @@ void trim_trailing_whitespace(char *str);
  */
 char *make_char_copy(char *str);
 
+typedef enum AddressingMode {
+  IMMEDIATE,
+  DIRECT,
+  INDIRECT_ACCUMULATE,
+  DIRECT_ACCUMULATE,
+  NONE
+} AddressingMode;
+
 typedef struct Line_obj {
   char error[150];
   char label[MAX_LABEL_LENGTH];
   int line_number;
-  enum { EMPTY, COMMENT, DIRECTIVE, INSTRUCTION } LineType;
+  enum { EMPTY, COMMENT, DIRECTIVE, INSTRUCTION, ERROR } LineType;
   union {
     struct {
       Directive directive_option;
       union {
         char label[MAX_LABEL_LENGTH];
-        char *str;
+        char *string;
         struct {
           int numbers[MAX_DATA_SIZE];
           int length;
@@ -94,16 +106,15 @@ typedef struct Line_obj {
         char label[MAX_LABEL_LENGTH];
         int immediate;
       } operands[2];
-      enum {
-        IMMEDIATE,
-        DIRECT,
-        INDIRECT_ACCUMULATE,
-        DIRECT_ACCUMULATE,
-        NONE
-      } addressing[2];
+      AddressingMode addressing[2];
       int length;
     } instruction;
-  } test;
+  }line_type;
 } Line_obj;
+
+typedef struct Tokens_Obj {
+  char *tokens[MAX_LABEL_LENGTH];
+  int size;
+} Tokens_Obj;
 
 #endif

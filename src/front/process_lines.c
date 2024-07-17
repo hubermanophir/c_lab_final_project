@@ -1,61 +1,121 @@
 #include "../../header_files/data_structures/linked_list.h"
+#include "../../header_files/front/front_validations.h"
 #include "../../header_files/global.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static char **separate_line_to_chars_by_spaces(char *line) {
-  char **tokens = (char **)malloc(sizeof(char *) * MAX_LINE_LENGTH);
+/**
+ * @brief separate the line into tokens by space chars
+ *
+ * @param line
+ * @return char**
+ */
+Tokens_Obj tokenize(char *line) {
+  Tokens_Obj tokens_obj = {0};
+  int size = 0;
   char *tok;
-  int i = 0;
 
-  if (tokens == NULL) {
-    fprintf(stderr, "Memory allocation failed\n");
-    exit(1);
+  if (*line == '\n') {
+    return tokens_obj;
   }
+  do {
+    tokens_obj.tokens[size++] = line;
+    tok = strpbrk(line, SPACE_CHARS);
+    if (tok) {
+      *tok = '\0';
+      tok++;
+      SKIP_WHITESPACE(tok);
+      line = tok;
+    } else {
+      break;
+    }
 
-  return tokens;
+  } while (1);
+  tokens_obj.size = size;
+  return tokens_obj;
+}
+union directive_or_opcode {
+  Directive directive;
+  Opcode opcode;
+} directive_or_opcode;
+
+Directive is_directive_in_tokens(Tokens_Obj tokens_obj) {
+  int i;
+  Directive directive;
+  for (i = 0; i < tokens_obj.size; i++) {
+    directive = get_directive_from_string(tokens_obj.tokens[i]);
+    if (directive != -1) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+Opcode is_opcode_in_tokens(Tokens_Obj tokens_obj) {
+  int i;
+  Opcode opcode;
+  for (i = 0; i < tokens_obj.size; i++) {
+    opcode = get_opcode_from_string(tokens_obj.tokens[i]);
+    if (opcode != -1) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 static Line_obj *process_single_line(char *line) {
-  char *lineptr = line, *tok, label[MAX_LABEL_LENGTH],
-       test_str[MAX_LINE_LENGTH];
   Line_obj *line_obj;
-  int last_ptr;
-  int is_label_declaration;
-  Opcode opcode;
+  Tokens_Obj tokens_obj;
   Directive directive;
-
+  Opcode opcode;
+  int is_directive, is_opcode;
   line_obj = (Line_obj *)malloc(sizeof(Line_obj));
   if (line_obj == NULL) {
     fprintf(stderr, "Memory allocation failed\n");
     exit(1);
   }
-  /*Trim line end and beginning white chars*/
-  lineptr[strlen(lineptr) - 1] = '\0';
-  SKIP_WHITESPACE(lineptr);
-  trim_trailing_whitespace(lineptr);
-
-  tok = strpbrk(lineptr, SPACE_CHARS);
-  if (tok == NULL) {
-    free(line_obj);
-    return NULL;
+  if (strlen(line) > 0) {
+    line[strlen(line) - 1] = '\0';
+    trim_trailing_whitespace(line);
+    SKIP_WHITESPACE(line);
   }
-  last_ptr = tok - lineptr;
 
-  strncpy(test_str, lineptr, last_ptr);
-  test_str[last_ptr] = '\0';
-  opcode = get_opcode_from_string(test_str);
-  directive = get_directive_from_string(test_str);
-
-  if (opcode != -1) {
-    printf("line opcode: %d , line: %s\n", opcode, line);
-  } else if (directive != -1) {
-    printf("line directive: %d line: %s\n", directive, line);
-  } else {
-    printf("Non of the above line: %s is delaration:%d\n", line,
-           is_label_declaration);
+  if (is_comment_line(line)) {
+    printf("comment line line: %s\n", line);
+    line_obj->LineType = COMMENT;
+    return line_obj;
   }
+  if (is_empty_line(line)) {
+    printf("empty line line: %s\n", line);
+    line_obj->LineType = EMPTY;
+    return line_obj;
+  }
+
+  tokens_obj = tokenize(line);
+
+  is_directive = is_directive_in_tokens(tokens_obj);
+  is_opcode = is_opcode_in_tokens(tokens_obj);
+
+  if (is_directive && is_opcode) {
+    strcpy(line_obj->error, "Error: line contains both directive and opcode");
+    line_obj->LineType = ERROR;
+    return line_obj;
+  } else if (is_directive) {
+    printf("directive line line: %s\n", line);
+    line_obj->LineType = DIRECTIVE;
+    return line_obj;
+
+  } else if (is_opcode) {
+    printf("instruction line line: %s\n", line);
+    line_obj->LineType = INSTRUCTION;
+    return line_obj;
+  }
+  printf("Invalid line: %s\n", line);
+  strcpy(line_obj->error, "Error: File non of the allowed types: comment, "
+                          "empty, directive, instruction");
+  line_obj->LineType = ERROR;
+
   return line_obj;
 }
 
