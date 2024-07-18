@@ -120,9 +120,19 @@ Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     strcpy(line_obj->error, "Invalid line, missing comma between operands");
     return operands;
   case 3:
-
+    if (is_comma_str(tokens_obj->tokens[1])) {
+      operands.operand1 = tokens_obj->tokens[0];
+      operands.operand2 = tokens_obj->tokens[2];
+      operands.amount = 2;
+      return operands;
+    } else {
+      strcpy(line_obj->error,
+             "Invalid line, should get 2 operands separated by comma");
+      return operands;
+    }
   default:
-    break;
+    strcpy(line_obj->error, "Invalid line, invalid number of operands");
+    return operands;
   }
 }
 
@@ -149,6 +159,7 @@ static void update_label_declaration(Tokens_Obj *tokens_obj,
  */
 void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   Opcode opcode;
+  Operands operands;
   update_label_declaration(tokens_obj, line_obj);
   /*the opcode should be first*/
   opcode = get_opcode_from_string(tokens_obj->tokens[0]);
@@ -156,10 +167,13 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     strcpy(line_obj->error, "Invalid line opcode not in correct position");
     return;
   }
-  line_obj->line_type.instruction.opcode_option = opcode;
-  /*
   printf("opcode: %d\n", opcode);
-  */
+  line_obj->line_type.instruction.opcode_option = opcode;
+  remove_first_token(tokens_obj);
+  operands = get_operands(tokens_obj, line_obj);
+  if (strcmp(line_obj->error, "") != 0) {
+    return;
+  }
 }
 
 void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
