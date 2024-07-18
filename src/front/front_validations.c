@@ -5,7 +5,6 @@
 #include <string.h>
 
 typedef enum Operand_Type { REG, LABEL, IM, INV } Operand_Type;
-
 /*
 int convert_number_str_to_int(char *str) {
   char *endptr;
@@ -72,10 +71,10 @@ can be written like so:
 1.              size = 0
 2. op1          size = 1
 3. ,            size = 1
-3. op1,op2      size = 1
-4. op1, op2     size = 2
-5. op1 ,op2     size = 2
-6. op1 , op2    size = 3
+3. op1 ,        size = 2
+4. , op2        size = 2
+4. op1 op2      size = 2
+5. op1 , op2    size = 3
 
 
 */
@@ -94,17 +93,36 @@ typedef struct Operands {
   int amount;
 } Operands;
 
-Operands get_operands(Tokens_Obj tokens_obj, Line_obj line_obj) {
+int is_comma_str(char *str) { return *str == ','; }
+
+Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   Operands operands;
-  if (tokens_obj.size == 0) {
-    operands.operand1 = NULL;
-    operands.operand2 = NULL;
-    operands.amount = 0;
+  operands.operand1 = NULL;
+  operands.operand2 = NULL;
+  operands.amount = 0;
+  if ((tokens_obj->size > 0) && is_comma_str(tokens_obj->tokens[0])) {
+    strcpy(line_obj->error, "Invalid line, comma after opcode");
     return operands;
   }
-  if (tokens_obj.size == 1) {
-    if (tokens_obj.tokens[0]) {
-    }
+  if ((tokens_obj->size > 1) &&
+      is_comma_str(tokens_obj->tokens[tokens_obj->size - 1])) {
+    strcpy(line_obj->error, "Invalid line, comma at the end");
+    return operands;
+  }
+  switch (tokens_obj->size) {
+  case 0:
+    return operands;
+  case 1:
+    operands.operand1 = tokens_obj->tokens[0];
+    operands.amount = 1;
+    return operands;
+  case 2:
+    strcpy(line_obj->error, "Invalid line, missing comma between operands");
+    return operands;
+  case 3:
+
+  default:
+    break;
   }
 }
 
