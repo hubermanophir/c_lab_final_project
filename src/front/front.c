@@ -1,6 +1,11 @@
 #include "../../header_files/data_structures/linked_list.h"
+#include "../../header_files/global.h"
 #include "../../header_files/front/process_lines.h"
 #include <stdio.h>
+
+#include <stdlib.h>
+
+
 
 LinkedList *get_processed_lines(char *filename) {
   FILE *am_file;

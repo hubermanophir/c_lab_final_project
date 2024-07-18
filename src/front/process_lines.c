@@ -87,11 +87,15 @@ static Line_obj *process_single_line(char *line, int line_number) {
   Opcode opcode;
   int is_directive, is_opcode;
   int i;
+
+  
   line_obj = (Line_obj *)malloc(sizeof(Line_obj));
   if (line_obj == NULL) {
     fprintf(stderr, "Memory allocation failed\n");
     exit(1);
   }
+
+
   strcpy(line_obj->error, "");
   line_obj->line_number = line_number;
 
@@ -150,13 +154,13 @@ void process_lines(FILE *am_file, LinkedList *lines) {
 
   while (fgets(line, MAX_LINE_LENGTH, am_file)) {
     line_obj = process_single_line(line, line_number++);
-    if ( strcmp(line_obj->error, "") != 0) {
-      printf("Line: %d, Error: %s\n",line_obj->line_number, line_obj->error);
-    }
+    append_to_list_end(lines, line_obj);
+    /*
     if (line_obj) {
       free(line_obj);
     } else {
       free(line_obj);
     }
+    */
   }
 }
