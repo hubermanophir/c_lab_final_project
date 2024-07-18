@@ -167,7 +167,6 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     strcpy(line_obj->error, "Invalid line opcode not in correct position");
     return;
   }
-  printf("opcode: %d\n", opcode);
   line_obj->line_type.instruction.opcode_option = opcode;
   remove_first_token(tokens_obj);
   operands = get_operands(tokens_obj, line_obj);

@@ -80,7 +80,7 @@ Opcode is_opcode_in_tokens(Tokens_Obj tokens_obj) {
   return 0;
 }
 
-static Line_obj *process_single_line(char *line) {
+static Line_obj *process_single_line(char *line, int line_number) {
   Line_obj *line_obj;
   Tokens_Obj tokens_obj;
   Directive directive;
@@ -93,6 +93,7 @@ static Line_obj *process_single_line(char *line) {
     exit(1);
   }
   strcpy(line_obj->error, "");
+  line_obj->line_number = line_number;
 
   if (strlen(line) > 0) {
     line[strlen(line) - 1] = '\0';
@@ -144,10 +145,14 @@ static Line_obj *process_single_line(char *line) {
 
 void process_lines(FILE *am_file, LinkedList *lines) {
   char line[MAX_LINE_LENGTH];
+  int line_number = 1;
   Line_obj *line_obj;
 
   while (fgets(line, MAX_LINE_LENGTH, am_file)) {
-    line_obj = process_single_line(line);
+    line_obj = process_single_line(line, line_number++);
+    if ( strcmp(line_obj->error, "") != 0) {
+      printf("Line: %d, Error: %s\n",line_obj->line_number, line_obj->error);
+    }
     if (line_obj) {
       free(line_obj);
     } else {
