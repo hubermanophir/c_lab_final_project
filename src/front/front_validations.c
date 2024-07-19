@@ -16,10 +16,11 @@ Ex: mov source can be 0,1,2,3
     des can be 1,2,3
 */
 typedef enum Valid_groups {
-  ONE_GROUP,
-  TWO_GROUP,
-  THREE_GROUP,
-  FOUR_GROUP
+  ONE_GROUP, /*1*/
+  TWO_GROUP, /*1,2*/
+  THREE_GROUP,/*1,2,3*/
+  FOUR_GROUP,/*0,1,2,3*/
+  NONE_GROUP  /*NONE*/
 } Valid_groups;
 
 int convert_number_str_to_int(char *str) {
@@ -52,6 +53,16 @@ int is_valid_reg_num(char *str) {
   return 1;
 }
 
+void remove_first_token(Tokens_Obj *tokens_obj) {
+  int i;
+  for (i = 1; i < tokens_obj->size; i++) {
+    tokens_obj->tokens[i - 1] = tokens_obj->tokens[i];
+  }
+  tokens_obj->size--;
+}
+
+int is_comma_str(char *str) { return *str == ','; }
+
 AddressingMode get_addressing_mode(char *operand) {
   if (operand == NULL) {
     return NONE;
@@ -67,15 +78,6 @@ AddressingMode get_addressing_mode(char *operand) {
   return NONE;
 }
 
-void remove_first_token(Tokens_Obj *tokens_obj) {
-  int i;
-  for (i = 1; i < tokens_obj->size; i++) {
-    tokens_obj->tokens[i - 1] = tokens_obj->tokens[i];
-  }
-  tokens_obj->size--;
-}
-
-int is_comma_str(char *str) { return *str == ','; }
 
 Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   Operands operands;
@@ -143,32 +145,43 @@ int is_in_group(Valid_groups group, AddressingMode addressing) {
   case FOUR_GROUP:
     return addressing == IMMEDIATE || addressing == DIRECT ||
            addressing == INDIRECT_ACCUMULATE || addressing == DIRECT_ACCUMULATE;
+  case NONE_GROUP:
+    return addressing == NONE;
   default:
     return 0;
   }
 }
 
+int valid_operand_groups(Valid_groups first_argument_group,
+                         Valid_groups second_argument_group,
+                         Operands operands) {
+  return is_in_group(first_argument_group,
+                     get_addressing_mode(operands.operand1)) &&
+         is_in_group(second_argument_group,
+                     get_addressing_mode(operands.operand2));
+}
+
 static void validate_operands(Operands operands, Line_obj *line_obj,
                               Opcode opcode) {
-
-  AddressingMode first_op_add = get_addressing_mode(operands.operand1);
-  AddressingMode second_op_add = get_addressing_mode(operands.operand2);
   switch (opcode) {
   case MOV:
   case ADD:
   case SUB: {
-    is_in_group(FOUR_GROUP, first_op_add);
-    is_in_group(THREE_GROUP, second_op_add);
+    if (!valid_operand_groups(FOUR_GROUP, THREE_GROUP, operands)) {
+      strcpy(line_obj->error, "Invalid line, incorrect operand types");
+    }
     break;
   }
   case CMP: {
-    is_in_group(FOUR_GROUP, first_op_add);
-    is_in_group(FOUR_GROUP, second_op_add);
+    if (!valid_operand_groups(FOUR_GROUP, FOUR_GROUP, operands)) {
+      strcpy(line_obj->error, "Invalid line, incorrect operand types");
+    }
     break;
   }
   case LEA: {
-    is_in_group(ONE_GROUP, first_op_add);
-    is_in_group(FOUR_GROUP, second_op_add);
+    if (!valid_operand_groups(ONE_GROUP, THREE_GROUP, operands)) {
+      strcpy(line_obj->error, "Invalid line, incorrect operand types");
+    }
     break;
   }
   case CLR:
@@ -177,33 +190,47 @@ static void validate_operands(Operands operands, Line_obj *line_obj,
   case DEC:
   case RED: {
     if (operands.amount > 1) {
-      strcpy(line_obj->error, "Invalid line, too many operands");
+      strcpy(line_obj->error, "Invalid line,RED too many operands");
       break;
     }
+
+    if (!valid_operand_groups(THREE_GROUP, NONE_GROUP, operands)) {
+      strcpy(line_obj->error, "Invalid line, incorrect operand types");
+    }
+    break;
   }
   case JMP:
   case BNE:
   case JSR: {
     if (operands.amount > 1) {
-      strcpy(line_obj->error, "Invalid line, too many operands");
+      strcpy(line_obj->error, "Invalid line,JSR too many operands");
       break;
     }
+    if (!valid_operand_groups(TWO_GROUP, NONE_GROUP, operands)) {
+      strcpy(line_obj->error, "Invalid line, incorrect operand types");
+    }
+    break;
   }
   case PRN: {
     if (operands.amount > 1) {
-      strcpy(line_obj->error, "Invalid line, too many operands");
+      strcpy(line_obj->error, "Invalid line,PRN too many operands");
       break;
     }
+    if (!valid_operand_groups(FOUR_GROUP, NONE_GROUP, operands)) {
+      strcpy(line_obj->error, "Invalid line, incorrect operand types");
+    }
+    break;
   }
   case RTS:
   case STOP: {
     if (operands.amount != 0) {
-      strcpy(line_obj->error, "Invalid line, too many operands");
+      strcpy(line_obj->error, "Invalid line,STOP too many operands");
       return;
     }
   }
   }
 }
+
 /**
  * @brief Should validate the instruction line
  We know there is opcode as part of the tokens
