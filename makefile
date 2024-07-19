@@ -14,11 +14,12 @@ endif
  
 all: build_env $(PROG_NAME) 
  
-$(PROG_NAME):  assembler.o process_lines.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front.o front_validations.o
+$(PROG_NAME):  assembler.o process_lines.o helper_functions.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front.o front_validations.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
 assembler.o: src/assembler.c src/../header_files/front/front.h \
  src/../header_files/front/../data_structures/linked_list.h \
+ src/../header_files/front/../global.h src/../header_files/global.h \
  src/../header_files/preprocessor/preprocessor.h
 hashtable.o: src/data_structures/hashtable.c \
  src/data_structures/../../header_files/preprocessor/macro.h \
@@ -30,6 +31,17 @@ front.o: src/front/front.c \
  src/front/../../header_files/front/../../header_files/data_structures/linked_list.h \
  src/front/../../header_files/front/../../header_files/global.h
 front_validations.o: src/front/front_validations.c \
+ src/front/../../header_files/front/instruction_line_validations.h \
+ src/front/../../header_files/front/../../header_files/front/helper_functions.h \
+ src/front/../../header_files/front/../../header_files/front/validation_types.h \
+ src/front/../../header_files/front/../../header_files/global.h \
+ src/front/../../header_files/front/validation_types.h \
+ src/front/../../header_files/global.h
+helper_functions.o: src/front/helper_functions.c \
+ src/front/../../header_files/global.h
+instruction_line_validations.o: src/front/instruction_line_validations.c \
+ src/front/../../header_files/front/helper_functions.h \
+ src/front/../../header_files/front/validation_types.h \
  src/front/../../header_files/global.h
 process_lines.o: src/front/process_lines.c \
  src/front/../../header_files/data_structures/linked_list.h \
