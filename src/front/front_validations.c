@@ -23,7 +23,7 @@ typedef enum Valid_groups {
   NONE_GROUP  /*NONE*/
 } Valid_groups;
 
-int convert_number_str_to_int(char *str) {
+static int convert_number_str_to_int(char *str) {
   char *endptr;
   int num = strtol(str, &endptr, 10);
   if (*endptr != '\0') {
@@ -32,7 +32,13 @@ int convert_number_str_to_int(char *str) {
   return num;
 }
 
-int is_number(char *str) {
+/**
+ * @brief Checks if a string is a number and if it is it converts it
+ * 
+ * @param str 
+ * @return int 
+ */
+static int is_number(char *str) {
   int i;
   for (i = 0; i < strlen(str); i++) {
     if (!isdigit(str[i])) {
@@ -42,7 +48,13 @@ int is_number(char *str) {
   return convert_number_str_to_int(str);
 }
 
-int is_valid_reg_num(char *str) {
+/**
+ * @brief Checks if a register number is between 0-7
+ * 
+ * @param str 
+ * @return int 
+ */
+static int is_valid_reg_num(char *str) {
   int num = is_number(str);
   if (num == MIN_VALUE) {
     return 0;
@@ -53,7 +65,12 @@ int is_valid_reg_num(char *str) {
   return 1;
 }
 
-void remove_first_token(Tokens_Obj *tokens_obj) {
+/**
+ * @brief This function gets the tokens and removes the first one
+ * 
+ * @param tokens_obj 
+ */
+static void remove_first_token(Tokens_Obj *tokens_obj) {
   int i;
   for (i = 1; i < tokens_obj->size; i++) {
     tokens_obj->tokens[i - 1] = tokens_obj->tokens[i];
@@ -61,9 +78,21 @@ void remove_first_token(Tokens_Obj *tokens_obj) {
   tokens_obj->size--;
 }
 
+/**
+ * @brief simple check if a string is a comma
+ * 
+ * @param str 
+ * @return int 
+ */
 int is_comma_str(char *str) { return *str == ','; }
 
-AddressingMode get_addressing_mode(char *operand) {
+/**
+ * @brief This function check for the operand which addressing mode is it
+ * 
+ * @param operand 
+ * @return AddressingMode 
+ */
+static AddressingMode get_addressing_mode(char *operand) {
   if (operand == NULL) {
     return NONE;
   } else if (operand[0] == '#' && is_number(operand + 1) != MIN_VALUE) {
@@ -78,8 +107,14 @@ AddressingMode get_addressing_mode(char *operand) {
   return NONE;
 }
 
-
-Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
+/**
+ * @brief Get the operands and checks for correct comma placement
+ * 
+ * @param tokens_obj 
+ * @param line_obj 
+ * @return Operands 
+ */
+static Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   Operands operands;
   operands.operand1 = NULL;
   operands.operand2 = NULL;
@@ -120,6 +155,12 @@ Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   }
 }
 
+/**
+ * @brief Gets the tokens and if the first token is a label, updates the label and removes the token
+ * 
+ * @param tokens_obj 
+ * @param line_obj 
+ */
 static void update_label_declaration(Tokens_Obj *tokens_obj,
                                      Line_obj *line_obj) {
   char *first_token = tokens_obj->tokens[0];
@@ -133,6 +174,13 @@ static void update_label_declaration(Tokens_Obj *tokens_obj,
   strcpy(line_obj->label, "");
 }
 
+/**
+ * @brief Checks for given group if the addressing mode is in the group
+ * 
+ * @param group 
+ * @param addressing 
+ * @return int 
+ */
 int is_in_group(Valid_groups group, AddressingMode addressing) {
   switch (group) {
   case ONE_GROUP:
@@ -152,6 +200,15 @@ int is_in_group(Valid_groups group, AddressingMode addressing) {
   }
 }
 
+/**
+ * @brief This function matches between the given operands and the given groups
+ * 
+ * @param first_argument_group 
+ * @param second_argument_group 
+ * @param operands 
+ * @return int 1 if valid, 0 if not
+ 
+ */
 int valid_operand_groups(Valid_groups first_argument_group,
                          Valid_groups second_argument_group,
                          Operands operands) {
@@ -161,6 +218,14 @@ int valid_operand_groups(Valid_groups first_argument_group,
                      get_addressing_mode(operands.operand2));
 }
 
+/**
+ * @brief This function checks for the given operands and opcode if the amount of
+ arguments is correct and the source and destination addressing modes are valid
+ * 
+ * @param operands 
+ * @param line_obj 
+ * @param opcode 
+ */
 static void validate_operands(Operands operands, Line_obj *line_obj,
                               Opcode opcode) {
   switch (opcode) {
@@ -190,7 +255,7 @@ static void validate_operands(Operands operands, Line_obj *line_obj,
   case DEC:
   case RED: {
     if (operands.amount > 1) {
-      strcpy(line_obj->error, "Invalid line,RED too many operands");
+      strcpy(line_obj->error, "Invalid line, too many operands");
       break;
     }
 
@@ -203,7 +268,7 @@ static void validate_operands(Operands operands, Line_obj *line_obj,
   case BNE:
   case JSR: {
     if (operands.amount > 1) {
-      strcpy(line_obj->error, "Invalid line,JSR too many operands");
+      strcpy(line_obj->error, "Invalid line, too many operands");
       break;
     }
     if (!valid_operand_groups(TWO_GROUP, NONE_GROUP, operands)) {
@@ -213,7 +278,7 @@ static void validate_operands(Operands operands, Line_obj *line_obj,
   }
   case PRN: {
     if (operands.amount > 1) {
-      strcpy(line_obj->error, "Invalid line,PRN too many operands");
+      strcpy(line_obj->error, "Invalid line, too many operands");
       break;
     }
     if (!valid_operand_groups(FOUR_GROUP, NONE_GROUP, operands)) {
@@ -224,7 +289,7 @@ static void validate_operands(Operands operands, Line_obj *line_obj,
   case RTS:
   case STOP: {
     if (operands.amount != 0) {
-      strcpy(line_obj->error, "Invalid line,STOP too many operands");
+      strcpy(line_obj->error, "Invalid line, too many operands");
       return;
     }
   }
