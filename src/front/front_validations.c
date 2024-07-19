@@ -2,8 +2,8 @@
 #include "../../header_files/front/validation_types.h"
 #include "../../header_files/global.h"
 
+#include <stdio.h>
 #include <string.h>
-
 /**
  * @brief This function gets the tokens and removes the first one
  *
@@ -26,7 +26,7 @@ void remove_first_token(Tokens_Obj *tokens_obj) {
  */
 void update_label_declaration(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   char *first_token = tokens_obj->tokens[0];
-  if (strlen(first_token) > 2 && first_token[strlen(first_token) - 1] == ':') {
+  if (strlen(first_token) > 1 && first_token[strlen(first_token) - 1] == ':') {
     first_token[strlen(first_token) - 1] = '\0';
     strcpy(line_obj->label, first_token);
     /*skip token to next token*/
@@ -46,8 +46,6 @@ void update_label_declaration(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
 void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   Opcode opcode;
   Operands operands;
-  AddressingMode first_operand_mode;
-  AddressingMode second_operand_mode;
   update_label_declaration(tokens_obj, line_obj);
   /*the opcode should be first*/
   opcode = get_opcode_from_string(tokens_obj->tokens[0]);
@@ -68,8 +66,18 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   update_operands(line_obj, operands);
 }
 
-void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
+void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj,
+                             char *line) {
+  Directive directive;
   update_label_declaration(tokens_obj, line_obj);
+  directive = get_directive_from_string(tokens_obj->tokens[0]);
+  if (directive == -1) {
+    strcpy(line_obj->error, "Invalid directive");
+    return;
+  }
+  line_obj->line_type.directive.directive_option = directive;
+  printf("Line:%s  , Directive: %s\n",line, tokens_obj->tokens[0]);
+  remove_first_token(tokens_obj);
 }
 
 int is_comment_line(char *line) { return *line == ';'; }

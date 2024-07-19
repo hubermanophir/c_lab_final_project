@@ -85,16 +85,15 @@ static Line_obj *process_single_line(char *line, int line_number) {
   Tokens_Obj tokens_obj;
   Directive directive;
   Opcode opcode;
+  char line_copy[MAX_LINE_LENGTH];
   int is_directive, is_opcode;
   int i;
 
-  
   line_obj = (Line_obj *)malloc(sizeof(Line_obj));
   if (line_obj == NULL) {
     fprintf(stderr, "Memory allocation failed\n");
     exit(1);
   }
-
 
   strcpy(line_obj->error, "");
   line_obj->line_number = line_number;
@@ -113,8 +112,9 @@ static Line_obj *process_single_line(char *line, int line_number) {
     line_obj->LineType = EMPTY;
     return line_obj;
   }
-
+  strcpy(line_copy, line);
   tokens_obj = tokenize(line);
+
   is_directive = is_directive_in_tokens(tokens_obj);
   is_opcode = is_opcode_in_tokens(tokens_obj);
 
@@ -127,7 +127,7 @@ static Line_obj *process_single_line(char *line, int line_number) {
     printf("directive line line: %s\n", line);
     */
     line_obj->LineType = DIRECTIVE;
-    validate_directive_line(&tokens_obj, line_obj);
+    validate_directive_line(&tokens_obj, line_obj, line_copy);
     return line_obj;
 
   } else if (is_opcode) {

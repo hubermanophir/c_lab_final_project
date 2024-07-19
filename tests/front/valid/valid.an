@@ -13,7 +13,7 @@ LOOP:   prn #48
 .entry MAIN
         jmp LOOP
 END:    stop
-STR:    .string “abcd”
+STR:    .string “abcd test”
 LIST:   .data 6, -9
         .data -100
 K:      .data 31
