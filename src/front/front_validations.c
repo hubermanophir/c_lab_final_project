@@ -1,6 +1,7 @@
 #include "../../header_files/front/instruction_line_validations.h"
 #include "../../header_files/front/validation_types.h"
 #include "../../header_files/global.h"
+#include <stdio.h>
 #include <string.h>
 
 /**
@@ -45,6 +46,8 @@ void update_label_declaration(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
 void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   Opcode opcode;
   Operands operands;
+  AddressingMode first_operand_mode;
+  AddressingMode second_operand_mode;
   update_label_declaration(tokens_obj, line_obj);
   /*the opcode should be first*/
   opcode = get_opcode_from_string(tokens_obj->tokens[0]);
@@ -59,6 +62,12 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     return;
   }
   validate_operands(operands, line_obj, opcode);
+  if (strcmp(line_obj->error, "") != 0) {
+    return;
+  }
+  update_operands(line_obj, operands);
+
+  printf("Line Number%d Label:%s\n", line_obj->line_number, line_obj->label);
 }
 
 void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {

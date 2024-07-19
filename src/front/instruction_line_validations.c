@@ -156,3 +156,38 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   }
   }
 }
+
+static void update_by_type(Line_obj *line_obj, char *operand,
+                    AddressingMode addressing_mode, int index) {
+  switch (addressing_mode) {
+  case IMMEDIATE:
+    line_obj->line_type.instruction.operands[index].immediate =
+        is_number(operand + 1);
+    break;
+  case DIRECT:
+    strcpy(line_obj->line_type.instruction.operands[index].label, operand);
+    break;
+  case INDIRECT_ACCUMULATE:
+    line_obj->line_type.instruction.operands[index].register_index =
+        convert_number_str_to_int(operand + 1);
+    break;
+  case DIRECT_ACCUMULATE:
+    line_obj->line_type.instruction.operands[index].register_index =
+        convert_number_str_to_int(operand + 1);
+    break;
+  case NONE:
+  default:
+    break;
+  }
+}
+
+static void update_single_operand(Line_obj *line_obj, char *operand, int index) {
+  AddressingMode addressing_mode = get_addressing_mode(operand);
+  line_obj->line_type.instruction.addressing[index] = addressing_mode;
+  update_by_type(line_obj, operand, addressing_mode, index);
+}
+
+void update_operands(Line_obj *line_obj, Operands operands) {
+  update_single_operand(line_obj, operands.operand1, 0);
+  update_single_operand(line_obj, operands.operand2, 1);
+}
