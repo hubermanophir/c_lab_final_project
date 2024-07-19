@@ -127,6 +127,7 @@ static Line_obj *process_single_line(char *line, int line_number) {
     printf("directive line line: %s\n", line);
     */
     line_obj->LineType = DIRECTIVE;
+    validate_directive_line(&tokens_obj, line_obj);
     return line_obj;
 
   } else if (is_opcode) {
@@ -155,12 +156,5 @@ void process_lines(FILE *am_file, LinkedList *lines) {
   while (fgets(line, MAX_LINE_LENGTH, am_file)) {
     line_obj = process_single_line(line, line_number++);
     append_to_list_end(lines, line_obj);
-    /*
-    if (line_obj) {
-      free(line_obj);
-    } else {
-      free(line_obj);
-    }
-    */
   }
 }

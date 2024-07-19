@@ -4,8 +4,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum Operand_Type { REG, LABEL, IM, INV } Operand_Type;
+typedef struct Operands {
+  char *operand1;
+  char *operand2;
+  int amount;
+} Operands;
+
 /*
+This means the possible addressing modes
+Ex: mov source can be 0,1,2,3
+    des can be 1,2,3
+*/
+typedef enum Valid_groups {
+  ONE_GROUP,
+  TWO_GROUP,
+  THREE_GROUP,
+  FOUR_GROUP
+} Valid_groups;
+
 int convert_number_str_to_int(char *str) {
   char *endptr;
   int num = strtol(str, &endptr, 10);
@@ -24,60 +40,32 @@ int is_number(char *str) {
   }
   return convert_number_str_to_int(str);
 }
-Operand_Type get_operand_type(char *operand) {
-  char *tok;
-  if (operand[0] == 'r' && isdigit(operand[1]) && strlen(operand) == 2) {
-    return REG;
-  } else if (is_number(operand) != MIN_VALUE) {
-    return IM;
-  } else {
-    tok = strpbrk(operand, INVALID_LABEL_CHARS);
-    if (tok == NULL) {
-      return LABEL;
-    }
+
+int is_valid_reg_num(char *str) {
+  int num = is_number(str);
+  if (num == MIN_VALUE) {
+    return 0;
   }
-  return INV;
+  if (num < 0 || num > 7) {
+    return 0;
+  }
+  return 1;
 }
 
-AddressingMode get_addressing_mode(char *operand, Operand_Type operand_type) {
-  if (operand[0] == '#' && operand_type == IM) {
+AddressingMode get_addressing_mode(char *operand) {
+  if (operand == NULL) {
+    return NONE;
+  } else if (operand[0] == '#' && is_number(operand + 1) != MIN_VALUE) {
     return IMMEDIATE;
-  } else if (operand[0] == '*' && operand_type == REG) {
+  } else if (operand[0] == '*' && is_valid_reg_num(operand + 1)) {
     return INDIRECT_ACCUMULATE;
-  } else if (operand[0] == 'r' && operand_type == REG) {
+  } else if (operand[0] == 'r' && is_valid_reg_num(operand + 1)) {
     return DIRECT_ACCUMULATE;
-  } else if (operand_type == LABEL) {
+  } else if (strpbrk(operand, INVALID_LABEL_CHARS) == NULL) {
     return DIRECT;
   }
   return NONE;
 }
-
-*/
-/*
-Label can be in the beginning like so
-LABEL:
-or
-mov LABEL, 5
-
-
-*/
-char *get_label(Tokens_Obj tokens_obj) { return ""; }
-
-/*
-
-can Have 0,1,2 operands
-
-can be written like so:
-1.              size = 0
-2. op1          size = 1
-3. ,            size = 1
-3. op1 ,        size = 2
-4. , op2        size = 2
-4. op1 op2      size = 2
-5. op1 , op2    size = 3
-
-
-*/
 
 void remove_first_token(Tokens_Obj *tokens_obj) {
   int i;
@@ -86,12 +74,6 @@ void remove_first_token(Tokens_Obj *tokens_obj) {
   }
   tokens_obj->size--;
 }
-
-typedef struct Operands {
-  char *operand1;
-  char *operand2;
-  int amount;
-} Operands;
 
 int is_comma_str(char *str) { return *str == ','; }
 
@@ -138,7 +120,6 @@ Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
 
 static void update_label_declaration(Tokens_Obj *tokens_obj,
                                      Line_obj *line_obj) {
-  int i;
   char *first_token = tokens_obj->tokens[0];
   if (strlen(first_token) > 2 && first_token[strlen(first_token) - 1] == ':') {
     first_token[strlen(first_token) - 1] = '\0';
@@ -150,6 +131,79 @@ static void update_label_declaration(Tokens_Obj *tokens_obj,
   strcpy(line_obj->label, "");
 }
 
+int is_in_group(Valid_groups group, AddressingMode addressing) {
+  switch (group) {
+  case ONE_GROUP:
+    return addressing == DIRECT;
+  case TWO_GROUP:
+    return addressing == DIRECT || addressing == INDIRECT_ACCUMULATE;
+  case THREE_GROUP:
+    return addressing == DIRECT || addressing == INDIRECT_ACCUMULATE ||
+           addressing == DIRECT_ACCUMULATE;
+  case FOUR_GROUP:
+    return addressing == IMMEDIATE || addressing == DIRECT ||
+           addressing == INDIRECT_ACCUMULATE || addressing == DIRECT_ACCUMULATE;
+  default:
+    return 0;
+  }
+}
+
+static void validate_operands(Operands operands, Line_obj *line_obj,
+                              Opcode opcode) {
+
+  AddressingMode first_op_add = get_addressing_mode(operands.operand1);
+  AddressingMode second_op_add = get_addressing_mode(operands.operand2);
+  switch (opcode) {
+  case MOV:
+  case ADD:
+  case SUB: {
+    is_in_group(FOUR_GROUP, first_op_add);
+    is_in_group(THREE_GROUP, second_op_add);
+    break;
+  }
+  case CMP: {
+    is_in_group(FOUR_GROUP, first_op_add);
+    is_in_group(FOUR_GROUP, second_op_add);
+    break;
+  }
+  case LEA: {
+    is_in_group(ONE_GROUP, first_op_add);
+    is_in_group(FOUR_GROUP, second_op_add);
+    break;
+  }
+  case CLR:
+  case NOT:
+  case INC:
+  case DEC:
+  case RED: {
+    if (operands.amount > 1) {
+      strcpy(line_obj->error, "Invalid line, too many operands");
+      break;
+    }
+  }
+  case JMP:
+  case BNE:
+  case JSR: {
+    if (operands.amount > 1) {
+      strcpy(line_obj->error, "Invalid line, too many operands");
+      break;
+    }
+  }
+  case PRN: {
+    if (operands.amount > 1) {
+      strcpy(line_obj->error, "Invalid line, too many operands");
+      break;
+    }
+  }
+  case RTS:
+  case STOP: {
+    if (operands.amount != 0) {
+      strcpy(line_obj->error, "Invalid line, too many operands");
+      return;
+    }
+  }
+  }
+}
 /**
  * @brief Should validate the instruction line
  We know there is opcode as part of the tokens
@@ -173,6 +227,7 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   if (strcmp(line_obj->error, "") != 0) {
     return;
   }
+  validate_operands(operands, line_obj, opcode);
 }
 
 void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
