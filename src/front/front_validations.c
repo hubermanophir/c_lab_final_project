@@ -1,4 +1,6 @@
+#include "../../header_files/front/directive_line_validations.h"
 #include "../../header_files/front/instruction_line_validations.h"
+
 #include "../../header_files/front/validation_types.h"
 #include "../../header_files/global.h"
 
@@ -66,6 +68,13 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   update_operands(line_obj, operands);
 }
 
+/**
+ * @brief This function validates the directive line
+ *
+ * @param tokens_obj
+ * @param line_obj
+ * @param line
+ */
 void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj,
                              char *line) {
   Directive directive;
@@ -76,8 +85,9 @@ void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj,
     return;
   }
   line_obj->line_type.directive.directive_option = directive;
-  printf("Line:%s  , Directive: %s\n",line, tokens_obj->tokens[0]);
+  printf("Line:%s  , Directive: %s\n", line, tokens_obj->tokens[0]);
   remove_first_token(tokens_obj);
+  validate_and_update_directive(line_obj, line, directive, tokens_obj);
 }
 
 int is_comment_line(char *line) { return *line == ';'; }
