@@ -3,8 +3,10 @@
 MAIN:   add r3, LIST
         jsr fn1
 LOOP:   prn #48
-        lea STR, r6
+        prn #-5
+        lea STR, *r6
         inc r6
+        inc *r6
         bne END
 ;comment line
 

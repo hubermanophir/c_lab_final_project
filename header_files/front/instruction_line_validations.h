@@ -52,6 +52,12 @@ arguments is correct and the source and destination addressing modes are valid
 */
 void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode);
 
+/**
+ * @brief This function gets the operands and updates them correctly in the Line Object
+ * 
+ * @param line_obj 
+ * @param operands 
+ */
 void update_operands(Line_obj *line_obj, Operands operands);
 
 #endif

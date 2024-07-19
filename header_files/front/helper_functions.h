@@ -1,6 +1,12 @@
 #ifndef FRONT_HELPER_FUNCTIONS_H
 #define FRONT_HELPER_FUNCTIONS_H
 
+/**
+ * @brief Converts a string to an integer Supports negative numbers
+ * 
+ * @param str 
+ * @return int 
+ */
 int convert_number_str_to_int(char *str);
 
 /**

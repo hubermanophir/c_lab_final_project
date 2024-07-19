@@ -9,7 +9,7 @@ AddressingMode get_addressing_mode(char *operand) {
     return NONE;
   } else if (operand[0] == '#' && is_number(operand + 1) != MIN_VALUE) {
     return IMMEDIATE;
-  } else if (operand[0] == '*' && is_valid_reg_num(operand + 1)) {
+  } else if (operand[0] == '*' && is_valid_reg_num(operand + 2)) {
     return INDIRECT_ACCUMULATE;
   } else if (operand[0] == 'r' && is_valid_reg_num(operand + 1)) {
     return DIRECT_ACCUMULATE;
@@ -158,18 +158,18 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
 }
 
 static void update_by_type(Line_obj *line_obj, char *operand,
-                    AddressingMode addressing_mode, int index) {
+                           AddressingMode addressing_mode, int index) {
   switch (addressing_mode) {
   case IMMEDIATE:
     line_obj->line_type.instruction.operands[index].immediate =
-        is_number(operand + 1);
+        convert_number_str_to_int(operand + 1);
     break;
   case DIRECT:
     strcpy(line_obj->line_type.instruction.operands[index].label, operand);
     break;
   case INDIRECT_ACCUMULATE:
     line_obj->line_type.instruction.operands[index].register_index =
-        convert_number_str_to_int(operand + 1);
+        convert_number_str_to_int(operand + 2);
     break;
   case DIRECT_ACCUMULATE:
     line_obj->line_type.instruction.operands[index].register_index =
@@ -181,7 +181,8 @@ static void update_by_type(Line_obj *line_obj, char *operand,
   }
 }
 
-static void update_single_operand(Line_obj *line_obj, char *operand, int index) {
+static void update_single_operand(Line_obj *line_obj, char *operand,
+                                  int index) {
   AddressingMode addressing_mode = get_addressing_mode(operand);
   line_obj->line_type.instruction.addressing[index] = addressing_mode;
   update_by_type(line_obj, operand, addressing_mode, index);
@@ -190,4 +191,5 @@ static void update_single_operand(Line_obj *line_obj, char *operand, int index) 
 void update_operands(Line_obj *line_obj, Operands operands) {
   update_single_operand(line_obj, operands.operand1, 0);
   update_single_operand(line_obj, operands.operand2, 1);
+  line_obj->line_type.instruction.length = operands.amount;
 }

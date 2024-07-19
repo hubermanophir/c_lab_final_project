@@ -1,7 +1,7 @@
 #include "../../header_files/front/instruction_line_validations.h"
 #include "../../header_files/front/validation_types.h"
 #include "../../header_files/global.h"
-#include <stdio.h>
+
 #include <string.h>
 
 /**
@@ -66,8 +66,6 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     return;
   }
   update_operands(line_obj, operands);
-
-  printf("Line Number%d Label:%s\n", line_obj->line_number, line_obj->label);
 }
 
 void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {

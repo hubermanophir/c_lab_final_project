@@ -5,16 +5,20 @@
 
 int convert_number_str_to_int(char *str) {
   char *endptr;
-  int num = strtol(str, &endptr, 10);
+  int is_negative = str[0] == '-' ? -1 : 1;
+  int num = strtol(str + 1, &endptr, 10);
   if (*endptr != '\0') {
     return 0;
   }
-  return num;
+  return num * is_negative;
 }
 
 int is_number(char *str) {
-  int i;
-  for (i = 0; i < strlen(str); i++) {
+  int i = 0;
+  if (str[0] == '-') {
+    i++;
+  }
+  for (; i < strlen(str); i++) {
     if (!isdigit(str[i])) {
       return MIN_VALUE;
     }
