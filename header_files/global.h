@@ -24,6 +24,8 @@
 
 #define MIN_VALUE -32768
 
+#define MAX_VALUE 32767
+
 typedef enum Opcode {
   MOV,
   CMP,

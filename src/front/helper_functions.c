@@ -16,7 +16,7 @@ int is_number(char *str) {
   int i = 0;
   int is_negative = str[0] == '-' ? 1 : 0;
   int is_plus = str[0] == '+' ? 1 : 0;
-  if (str[0] == '-') {
+  if (is_negative || is_plus) {
     i++;
   }
   for (; i < strlen(str); i++) {
