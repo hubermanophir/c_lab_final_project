@@ -11,7 +11,7 @@ AddressingMode get_addressing_mode(char *operand, Line_obj *line_obj) {
     return IMMEDIATE;
   } else if (operand[0] == '*' && is_valid_reg_num(operand + 2, line_obj)) {
     return INDIRECT_ACCUMULATE;
-  } else if (operand[0] == 'r' && is_valid_reg_num(operand + 1,line_obj)) {
+  } else if (operand[0] == 'r' && is_valid_reg_num(operand + 1, line_obj)) {
     return DIRECT_ACCUMULATE;
   } else if (strpbrk(operand, INVALID_LABEL_CHARS) == NULL) {
     return DIRECT;
@@ -26,11 +26,13 @@ Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   operands.amount = 0;
   if ((tokens_obj->size > 0) && is_comma_str(tokens_obj->tokens[0])) {
     strcpy(line_obj->error, "Invalid line, comma after opcode");
+    line_obj->LineType = ERROR;
     return operands;
   }
   if ((tokens_obj->size > 1) &&
       is_comma_str(tokens_obj->tokens[tokens_obj->size - 1])) {
     strcpy(line_obj->error, "Invalid line, comma at the end");
+    line_obj->LineType = ERROR;
     return operands;
   }
   switch (tokens_obj->size) {
@@ -42,6 +44,7 @@ Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     return operands;
   case 2:
     strcpy(line_obj->error, "Invalid line, missing comma between operands");
+    line_obj->LineType = ERROR;
     return operands;
   case 3:
     if (is_comma_str(tokens_obj->tokens[1])) {
@@ -52,10 +55,12 @@ Operands get_operands(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
     } else {
       strcpy(line_obj->error,
              "Invalid line, should get 2 operands separated by comma");
+      line_obj->LineType = ERROR;
       return operands;
     }
   default:
     strcpy(line_obj->error, "Invalid line, invalid number of operands");
+    line_obj->LineType = ERROR;
     return operands;
   }
 }
@@ -95,18 +100,21 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   case SUB: {
     if (!valid_operand_groups(FOUR_GROUP, THREE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
+      line_obj->LineType = ERROR;
     }
     break;
   }
   case CMP: {
     if (!valid_operand_groups(FOUR_GROUP, FOUR_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
+      line_obj->LineType = ERROR;
     }
     break;
   }
   case LEA: {
     if (!valid_operand_groups(ONE_GROUP, THREE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
+      line_obj->LineType = ERROR;
     }
     break;
   }
@@ -117,11 +125,13 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   case RED: {
     if (operands.amount > 1) {
       strcpy(line_obj->error, "Invalid line, too many operands");
+      line_obj->LineType = ERROR;
       break;
     }
 
     if (!valid_operand_groups(THREE_GROUP, NONE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
+      line_obj->LineType = ERROR;
     }
     break;
   }
@@ -130,20 +140,24 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   case JSR: {
     if (operands.amount > 1) {
       strcpy(line_obj->error, "Invalid line, too many operands");
+      line_obj->LineType = ERROR;
       break;
     }
     if (!valid_operand_groups(TWO_GROUP, NONE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
+      line_obj->LineType = ERROR;
     }
     break;
   }
   case PRN: {
     if (operands.amount > 1) {
       strcpy(line_obj->error, "Invalid line, too many operands");
+      line_obj->LineType = ERROR;
       break;
     }
     if (!valid_operand_groups(FOUR_GROUP, NONE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
+      line_obj->LineType = ERROR;
     }
     break;
   }
@@ -151,6 +165,7 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   case STOP: {
     if (operands.amount != 0) {
       strcpy(line_obj->error, "Invalid line, too many operands");
+      line_obj->LineType = ERROR;
       return;
     }
   }

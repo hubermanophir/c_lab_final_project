@@ -4,7 +4,6 @@
 #include "../header_files/preprocessor/preprocessor.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int main(int argc, char **argv) {
   char *an_file_name;
@@ -23,7 +22,7 @@ int main(int argc, char **argv) {
 
   while (current_list_item) {
     line_error = ((Line_obj *)current_list_item->data)->error;
-    if (strcmp(line_error, "") != 0) {
+    if (((Line_obj *)current_list_item->data)->LineType == ERROR) {
       printf("Line:%d, Error: %s\n",
              ((Line_obj *)current_list_item->data)->line_number, line_error);
     }

@@ -90,7 +90,7 @@ typedef struct Line_obj {
   char error[MAX_DATA_SIZE];
   char label[MAX_LABEL_LENGTH];
   int line_number;
-  enum { EMPTY, COMMENT, DIRECTIVE, INSTRUCTION, ERROR } LineType;
+  enum { DIRECTIVE, INSTRUCTION, ERROR } LineType;
   union {
     struct {
       Directive directive_option;
@@ -113,7 +113,7 @@ typedef struct Line_obj {
       AddressingMode addressing[2];
       int length;
     } instruction;
-  }line_type;
+  } line_type;
 } Line_obj;
 
 typedef struct Tokens_Obj {

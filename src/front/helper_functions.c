@@ -36,6 +36,7 @@ int is_valid_reg_num(char *str, Line_obj *line_obj) {
 
   if (num < 0 || num > 7) {
     strcpy(line_obj->error, "Invalid register number");
+    line_obj->LineType = ERROR;
     return 0;
   }
   return 1;

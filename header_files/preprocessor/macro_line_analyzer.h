@@ -10,6 +10,7 @@ typedef enum MacroLineType {
   MACRO_END,
   MACRO_CALL,
   CODE_LINE,
+  SKIP_LINE,
   INVALID
 } MacroLineType;
 

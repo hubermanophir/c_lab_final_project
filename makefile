@@ -27,6 +27,7 @@ hashtable.o: src/data_structures/hashtable.c \
 linked_list.o: src/data_structures/linked_list.c
 directive_line_validations.o: src/front/directive_line_validations.c \
  src/front/../../header_files/front/helper_functions.h \
+ src/front/../../header_files/front/../global.h \
  src/front/../../header_files/global.h
 front.o: src/front/front.c \
  src/front/../../header_files/data_structures/linked_list.h \
@@ -36,6 +37,7 @@ front.o: src/front/front.c \
 front_validations.o: src/front/front_validations.c \
  src/front/../../header_files/front/directive_line_validations.h \
  src/front/../../header_files/front/../front/helper_functions.h \
+ src/front/../../header_files/front/../front/../global.h \
  src/front/../../header_files/front/../global.h \
  src/front/../../header_files/front/instruction_line_validations.h \
  src/front/../../header_files/front/../../header_files/front/helper_functions.h \
@@ -47,6 +49,7 @@ helper_functions.o: src/front/helper_functions.c \
  src/front/../../header_files/global.h
 instruction_line_validations.o: src/front/instruction_line_validations.c \
  src/front/../../header_files/front/helper_functions.h \
+ src/front/../../header_files/front/../global.h \
  src/front/../../header_files/front/validation_types.h \
  src/front/../../header_files/global.h
 process_lines.o: src/front/process_lines.c \
@@ -78,6 +81,7 @@ preprocessor.o: src/preprocessor/preprocessor.c \
  
 clean:
 	rm -rf $(BUILD_DIR)
+	find . -type f -name '*.an' -delete
  
 build_env:
 	mkdir -p $(BUILD_DIR)

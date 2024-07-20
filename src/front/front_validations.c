@@ -52,6 +52,7 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   opcode = get_opcode_from_string(tokens_obj->tokens[0]);
   if (opcode == -1) {
     strcpy(line_obj->error, "Invalid line opcode not in correct position");
+    line_obj->LineType = ERROR;
     return;
   }
   line_obj->line_type.instruction.opcode_option = opcode;
@@ -81,13 +82,10 @@ void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj,
   directive = get_directive_from_string(tokens_obj->tokens[0]);
   if (directive == -1) {
     strcpy(line_obj->error, "Invalid directive");
+    line_obj->LineType = ERROR;
     return;
   }
   line_obj->line_type.directive.directive_option = directive;
   remove_first_token(tokens_obj);
   validate_and_update_directive(line_obj, line, directive, tokens_obj);
 }
-
-int is_comment_line(char *line) { return *line == ';'; }
-
-int is_empty_line(char *line) { return *line == '\0'; }

@@ -10,6 +10,7 @@ typedef enum MacroLineType {
   MACRO_END,
   MACRO_CALL,
   CODE_LINE,
+  SKIP_LINE,
   INVALID
 } MacroLineType;
 
@@ -24,12 +25,16 @@ typedef enum InvalidMacroType {
   VALID
 } InvalidMacroType;
 
+int is_comment_line(char *line) { return *line == ';'; }
+
+int is_empty_line(char *line) { return *line == '\0'; }
+
 /**
  * @brief Print error by the invalid type and return invalid if indeed invalid
- * 
- * @param type 
- * @param name 
- * @return MacroLineType 
+ *
+ * @param type
+ * @param name
+ * @return MacroLineType
  */
 MacroLineType handle_invalid_name(InvalidMacroType type, char *name) {
   switch (type) {
@@ -64,8 +69,8 @@ MacroLineType handle_invalid_name(InvalidMacroType type, char *name) {
 
 /**
  * @brief check if the name contains invalid chars ,; \t\n\v\f
- * 
- * @param test_str 
+ *
+ * @param test_str
  * @return int return 1 if invalid 0 if valid
  */
 static int does_contain_invalid_chars(char *test_str) {
@@ -87,10 +92,10 @@ static int does_contain_invalid_chars(char *test_str) {
 
 /**
  * @brief check for various invalid macro names
- * 
- * @param name 
- * @param existing_macros 
- * @return InvalidMacroType 
+ *
+ * @param name
+ * @param existing_macros
+ * @return InvalidMacroType
  */
 static InvalidMacroType is_valid_macro_name(char *name,
                                             Hashtable *existing_macros) {
@@ -116,9 +121,9 @@ static InvalidMacroType is_valid_macro_name(char *name,
 
 /**
  * @brief checks that the macro call is isolated
- * 
- * @param line 
- * @param name 
+ *
+ * @param line
+ * @param name
  * @return int return 1 if isolated and 0 if not
  */
 int check_macro_isolated_line(char *line, char *name) {
@@ -131,10 +136,10 @@ int check_macro_isolated_line(char *line, char *name) {
 
 /**
  * @brief Trying to extract the macro name from the line
- * 
- * @param line 
- * @param existing_names 
- * @param size 
+ *
+ * @param line
+ * @param existing_names
+ * @param size
  * @return char* if exists and NULL if doesn't exist
  */
 char *get_macro_in_line(char *line, char **existing_names, int size) {
@@ -148,7 +153,7 @@ char *get_macro_in_line(char *line, char **existing_names, int size) {
 }
 
 MacroLineType get_line_type(char *line, Hashtable *existing_macros,
-                       Macro *current_macro) {
+                            Macro *current_macro) {
   char *tok, *is_macro_in_line;
   Macro *existing_macro;
   int size, i, is_valid;
@@ -159,6 +164,13 @@ MacroLineType get_line_type(char *line, Hashtable *existing_macros,
     line[strlen(line) - 1] = '\0';
     trim_trailing_whitespace(line);
     SKIP_WHITESPACE(line);
+  }
+
+  if (is_comment_line(line)) {
+    return SKIP_LINE;
+  }
+  if (is_empty_line(line)) {
+    return SKIP_LINE;
   }
 
   size = get_existing_macro_names(existing_macros, &existing_names);

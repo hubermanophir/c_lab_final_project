@@ -19,6 +19,7 @@ static void data_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
       current_value = is_number(tokens_obj->tokens[i]);
       if (current_value == MIN_VALUE) {
         strcpy(line_obj->error, "Invalid number");
+        line_obj->LineType = ERROR;
         return;
       }
       numbers[numbers_index++] = current_value;
@@ -26,6 +27,7 @@ static void data_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
 
       if (strcmp(tokens_obj->tokens[i], ",") != 0) {
         strcpy(line_obj->error, "Missing comma between numbers");
+        line_obj->LineType = ERROR;
         return;
       }
     }
@@ -41,9 +43,9 @@ static void data_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
 
 /**
  * @brief Check for a string directive
- * 
- * @param line_obj 
- * @param line 
+ *
+ * @param line_obj
+ * @param line
  */
 static void string_directive(Line_obj *line_obj, char *line) {
   char string[MAX_LINE_LENGTH];
@@ -52,12 +54,14 @@ static void string_directive(Line_obj *line_obj, char *line) {
   beginning_ptr = strpbrk(line, "\"");
   if (beginning_ptr == NULL) {
     strcpy(line_obj->error, "String not contained in quotes");
+    line_obj->LineType = ERROR;
     return;
   }
   line = beginning_ptr + 1;
   end_ptr = strpbrk(line, "\"");
   if (end_ptr == NULL) {
     strcpy(line_obj->error, "String missing quotes");
+    line_obj->LineType = ERROR;
     return;
   }
   str_length = end_ptr - line;
@@ -69,18 +73,20 @@ static void string_directive(Line_obj *line_obj, char *line) {
 
 /**
  * @brief check for entry directive
- * 
- * @param line_obj 
- * @param tokens_obj 
+ *
+ * @param line_obj
+ * @param tokens_obj
  */
 static void entry_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
   char *bad_label;
   if (tokens_obj->size != 1) {
     strcpy(line_obj->error, "Entry directive should have only one operand");
+    line_obj->LineType = ERROR;
     return;
   }
   if (strpbrk(tokens_obj->tokens[0], INVALID_LABEL_CHARS) != NULL) {
     strcpy(line_obj->error, "Label contains invalid characters");
+    line_obj->LineType = ERROR;
     return;
   }
   strcpy(line_obj->line_type.directive.directive_operand.label,
@@ -89,18 +95,19 @@ static void entry_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
 
 /**
  * @brief Check for extern directive
- * 
- * @param line_obj 
- * @param tokens_obj 
+ *
+ * @param line_obj
+ * @param tokens_obj
  */
 static void extern_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
   if (tokens_obj->size != 1) {
     strcpy(line_obj->error, "Extern directive should have only one operand");
-
+    line_obj->LineType = ERROR;
     return;
   }
   if (strpbrk(tokens_obj->tokens[0], INVALID_LABEL_CHARS) != NULL) {
     strcpy(line_obj->error, "Label contains invalid characters");
+    line_obj->LineType = ERROR;
     return;
   }
   strcpy(line_obj->line_type.directive.directive_operand.label,

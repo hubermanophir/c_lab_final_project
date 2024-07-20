@@ -104,14 +104,6 @@ static Line_obj *process_single_line(char *line, int line_number) {
     SKIP_WHITESPACE(line);
   }
 
-  if (is_comment_line(line)) {
-    line_obj->LineType = COMMENT;
-    return line_obj;
-  }
-  if (is_empty_line(line)) {
-    line_obj->LineType = EMPTY;
-    return line_obj;
-  }
   strcpy(line_copy, line);
   tokens_obj = tokenize(line);
 
@@ -123,24 +115,15 @@ static Line_obj *process_single_line(char *line, int line_number) {
     line_obj->LineType = ERROR;
     return line_obj;
   } else if (is_directive) {
-    /*
-    printf("directive line line: %s\n", line);
-    */
     line_obj->LineType = DIRECTIVE;
     validate_directive_line(&tokens_obj, line_obj, line_copy);
     return line_obj;
 
   } else if (is_opcode) {
-    /*
-    printf("instruction line line: %s\n", line);
-    */
     line_obj->LineType = INSTRUCTION;
     validate_instruction_line(&tokens_obj, line_obj);
     return line_obj;
   }
-  /*
-  printf("Invalid line: %s\n", line);
-  */
   strcpy(line_obj->error, "Error: File non of the allowed types: comment, "
                           "empty, directive, instruction");
   line_obj->LineType = ERROR;

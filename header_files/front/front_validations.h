@@ -20,19 +20,4 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj);
 void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj,
                              char *line);
 
-/**
- * @brief Checks if comment line
- *
- * @param line
- * @return int
- */
-int is_comment_line(char *line);
-
-/**
- * @brief Checks if empty line
- *
- * @param line
- * @return int
- */
-int is_empty_line(char *line);
 #endif
