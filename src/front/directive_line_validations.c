@@ -78,7 +78,6 @@ static void string_directive(Line_obj *line_obj, char *line) {
  * @param tokens_obj
  */
 static void entry_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
-  char *bad_label;
   if (tokens_obj->size != 1) {
     strcpy(line_obj->error, "Entry directive should have only one operand");
     line_obj->LineType = ERROR;

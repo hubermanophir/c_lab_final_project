@@ -83,11 +83,8 @@ Opcode is_opcode_in_tokens(Tokens_Obj tokens_obj) {
 static Line_obj *process_single_line(char *line, int line_number) {
   Line_obj *line_obj;
   Tokens_Obj tokens_obj;
-  Directive directive;
-  Opcode opcode;
   char line_copy[MAX_LINE_LENGTH];
   int is_directive, is_opcode;
-  int i;
 
   line_obj = (Line_obj *)malloc(sizeof(Line_obj));
   if (line_obj == NULL) {
