@@ -96,7 +96,7 @@ typedef struct Line_obj {
       Directive directive_option;
       union {
         char label[MAX_LABEL_LENGTH];
-        char *string;
+        char string[MAX_LINE_LENGTH];
         struct {
           int numbers[MAX_DATA_SIZE];
           int length;

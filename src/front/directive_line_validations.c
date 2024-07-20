@@ -39,6 +39,28 @@ static void data_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
   }
 }
 
+static void string_directive(Line_obj *line_obj, char *line) {
+  char string[MAX_LINE_LENGTH];
+  char *beginning_ptr, *end_ptr;
+  int str_length;
+  beginning_ptr = strpbrk(line, "\"");
+  if (beginning_ptr == NULL) {
+    strcpy(line_obj->error, "String not contained in quotes");
+    return;
+  }
+  line = beginning_ptr + 1;
+  end_ptr = strpbrk(line, "\"");
+  if (end_ptr == NULL) {
+    strcpy(line_obj->error, "String missing quotes");
+    return;
+  }
+  str_length = end_ptr - line;
+  strncpy(string, line, end_ptr - line);
+  string[str_length] = '\0';
+
+  strcpy(line_obj->line_type.directive.directive_operand.string, string);
+}
+
 void validate_and_update_directive(Line_obj *line_obj, char *line,
                                    Directive directive,
                                    Tokens_Obj *tokens_obj) {
@@ -49,6 +71,7 @@ void validate_and_update_directive(Line_obj *line_obj, char *line,
     break;
     /*String contained in quotes "test string" */
   case STRING:
+    string_directive(line_obj, line);
     break;
     /*Label declaration*/
   case ENTRY:
