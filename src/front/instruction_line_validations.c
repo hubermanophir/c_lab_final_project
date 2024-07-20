@@ -4,14 +4,14 @@
 #include <stdio.h>
 #include <string.h>
 
-AddressingMode get_addressing_mode(char *operand) {
+AddressingMode get_addressing_mode(char *operand, Line_obj *line_obj) {
   if (operand == NULL) {
     return NONE;
   } else if (operand[0] == '#' && is_number(operand + 1) != MIN_VALUE) {
     return IMMEDIATE;
-  } else if (operand[0] == '*' && is_valid_reg_num(operand + 2)) {
+  } else if (operand[0] == '*' && is_valid_reg_num(operand + 2, line_obj)) {
     return INDIRECT_ACCUMULATE;
-  } else if (operand[0] == 'r' && is_valid_reg_num(operand + 1)) {
+  } else if (operand[0] == 'r' && is_valid_reg_num(operand + 1,line_obj)) {
     return DIRECT_ACCUMULATE;
   } else if (strpbrk(operand, INVALID_LABEL_CHARS) == NULL) {
     return DIRECT;
@@ -80,12 +80,12 @@ int is_in_group(Valid_groups group, AddressingMode addressing) {
 }
 
 int valid_operand_groups(Valid_groups first_argument_group,
-                         Valid_groups second_argument_group,
-                         Operands operands) {
+                         Valid_groups second_argument_group, Operands operands,
+                         Line_obj *line_obj) {
   return is_in_group(first_argument_group,
-                     get_addressing_mode(operands.operand1)) &&
+                     get_addressing_mode(operands.operand1, line_obj)) &&
          is_in_group(second_argument_group,
-                     get_addressing_mode(operands.operand2));
+                     get_addressing_mode(operands.operand2, line_obj));
 }
 
 void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
@@ -93,19 +93,19 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   case MOV:
   case ADD:
   case SUB: {
-    if (!valid_operand_groups(FOUR_GROUP, THREE_GROUP, operands)) {
+    if (!valid_operand_groups(FOUR_GROUP, THREE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
     }
     break;
   }
   case CMP: {
-    if (!valid_operand_groups(FOUR_GROUP, FOUR_GROUP, operands)) {
+    if (!valid_operand_groups(FOUR_GROUP, FOUR_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
     }
     break;
   }
   case LEA: {
-    if (!valid_operand_groups(ONE_GROUP, THREE_GROUP, operands)) {
+    if (!valid_operand_groups(ONE_GROUP, THREE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
     }
     break;
@@ -120,7 +120,7 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
       break;
     }
 
-    if (!valid_operand_groups(THREE_GROUP, NONE_GROUP, operands)) {
+    if (!valid_operand_groups(THREE_GROUP, NONE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
     }
     break;
@@ -132,7 +132,7 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
       strcpy(line_obj->error, "Invalid line, too many operands");
       break;
     }
-    if (!valid_operand_groups(TWO_GROUP, NONE_GROUP, operands)) {
+    if (!valid_operand_groups(TWO_GROUP, NONE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
     }
     break;
@@ -142,7 +142,7 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
       strcpy(line_obj->error, "Invalid line, too many operands");
       break;
     }
-    if (!valid_operand_groups(FOUR_GROUP, NONE_GROUP, operands)) {
+    if (!valid_operand_groups(FOUR_GROUP, NONE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
     }
     break;
@@ -157,8 +157,9 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   }
 }
 
-static void update_by_type(Line_obj *line_obj, char *operand,
-                           AddressingMode addressing_mode, int index) {
+static void update_by_type(Line_obj *line_obj, char *operand, int index) {
+  AddressingMode addressing_mode = get_addressing_mode(operand, line_obj);
+  line_obj->line_type.instruction.addressing[index] = addressing_mode;
   switch (addressing_mode) {
   case IMMEDIATE:
     line_obj->line_type.instruction.operands[index].immediate =
@@ -183,9 +184,7 @@ static void update_by_type(Line_obj *line_obj, char *operand,
 
 static void update_single_operand(Line_obj *line_obj, char *operand,
                                   int index) {
-  AddressingMode addressing_mode = get_addressing_mode(operand);
-  line_obj->line_type.instruction.addressing[index] = addressing_mode;
-  update_by_type(line_obj, operand, addressing_mode, index);
+  update_by_type(line_obj, operand, index);
 }
 
 void update_operands(Line_obj *line_obj, Operands operands) {

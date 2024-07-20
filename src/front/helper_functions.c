@@ -5,16 +5,17 @@
 
 int convert_number_str_to_int(char *str) {
   char *endptr;
-  int is_negative = str[0] == '-' ? -1 : 1;
-  int num = strtol(str + 1, &endptr, 10);
+  int num = strtol(str, &endptr, 10);
   if (*endptr != '\0') {
     return 0;
   }
-  return num * is_negative;
+  return num;
 }
 
 int is_number(char *str) {
   int i = 0;
+  int is_negative = str[0] == '-' ? 1 : 0;
+  int is_plus = str[0] == '+' ? 1 : 0;
   if (str[0] == '-') {
     i++;
   }
@@ -23,15 +24,18 @@ int is_number(char *str) {
       return MIN_VALUE;
     }
   }
-  return convert_number_str_to_int(str);
+  return (is_negative ? -1 : 1) *
+         convert_number_str_to_int(str + is_negative + is_plus);
 }
 
-int is_valid_reg_num(char *str) {
+int is_valid_reg_num(char *str, Line_obj *line_obj) {
   int num = is_number(str);
   if (num == MIN_VALUE) {
     return 0;
   }
+
   if (num < 0 || num > 7) {
+    strcpy(line_obj->error, "Invalid register number");
     return 0;
   }
   return 1;

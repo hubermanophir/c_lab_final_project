@@ -1,11 +1,11 @@
 #ifndef FRONT_HELPER_FUNCTIONS_H
 #define FRONT_HELPER_FUNCTIONS_H
-
+#include "../global.h"
 /**
  * @brief Converts a string to an integer Supports negative numbers
- * 
- * @param str 
- * @return int 
+ *
+ * @param str
+ * @return int
  */
 int convert_number_str_to_int(char *str);
 
@@ -23,7 +23,7 @@ int is_number(char *str);
  * @param str
  * @return int
  */
-int is_valid_reg_num(char *str);
+int is_valid_reg_num(char *str, Line_obj *line_obj);
 
 /**
  * @brief simple check if a string is a comma

@@ -4,7 +4,6 @@
 #include "../../header_files/front/validation_types.h"
 #include "../../header_files/global.h"
 
-#include <stdio.h>
 #include <string.h>
 /**
  * @brief This function gets the tokens and removes the first one
@@ -85,7 +84,6 @@ void validate_directive_line(Tokens_Obj *tokens_obj, Line_obj *line_obj,
     return;
   }
   line_obj->line_type.directive.directive_option = directive;
-  printf("Line:%s  , Directive: %s\n", line, tokens_obj->tokens[0]);
   remove_first_token(tokens_obj);
   validate_and_update_directive(line_obj, line, directive, tokens_obj);
 }

@@ -5,7 +5,7 @@ MAIN:   add r3, LIST
 LOOP:   prn #48
         prn #-5
         lea STR, *r6
-        inc r7
+        inc r8
         inc *r6
         bne END
 ;comment line
@@ -17,4 +17,4 @@ STR:    .string “abcd test”
 LIST:   .data 6, -9 ,+8,10
         .data -100
 K:      .data 31
-.extern L3
+.extern L3 
