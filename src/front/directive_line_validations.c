@@ -39,6 +39,12 @@ static void data_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
   }
 }
 
+/**
+ * @brief Check for a string directive
+ * 
+ * @param line_obj 
+ * @param line 
+ */
 static void string_directive(Line_obj *line_obj, char *line) {
   char string[MAX_LINE_LENGTH];
   char *beginning_ptr, *end_ptr;
@@ -61,6 +67,46 @@ static void string_directive(Line_obj *line_obj, char *line) {
   strcpy(line_obj->line_type.directive.directive_operand.string, string);
 }
 
+/**
+ * @brief check for entry directive
+ * 
+ * @param line_obj 
+ * @param tokens_obj 
+ */
+static void entry_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
+  char *bad_label;
+  if (tokens_obj->size != 1) {
+    strcpy(line_obj->error, "Entry directive should have only one operand");
+    return;
+  }
+  if (strpbrk(tokens_obj->tokens[0], INVALID_LABEL_CHARS) != NULL) {
+    strcpy(line_obj->error, "Label contains invalid characters");
+    return;
+  }
+  strcpy(line_obj->line_type.directive.directive_operand.label,
+         tokens_obj->tokens[0]);
+}
+
+/**
+ * @brief Check for extern directive
+ * 
+ * @param line_obj 
+ * @param tokens_obj 
+ */
+static void extern_directive(Line_obj *line_obj, Tokens_Obj *tokens_obj) {
+  if (tokens_obj->size != 1) {
+    strcpy(line_obj->error, "Extern directive should have only one operand");
+
+    return;
+  }
+  if (strpbrk(tokens_obj->tokens[0], INVALID_LABEL_CHARS) != NULL) {
+    strcpy(line_obj->error, "Label contains invalid characters");
+    return;
+  }
+  strcpy(line_obj->line_type.directive.directive_operand.label,
+         tokens_obj->tokens[0]);
+}
+
 void validate_and_update_directive(Line_obj *line_obj, char *line,
                                    Directive directive,
                                    Tokens_Obj *tokens_obj) {
@@ -75,9 +121,11 @@ void validate_and_update_directive(Line_obj *line_obj, char *line,
     break;
     /*Label declaration*/
   case ENTRY:
+    entry_directive(line_obj, tokens_obj);
     break;
     /*External label declaration*/
   case EXTERN:
+    extern_directive(line_obj, tokens_obj);
     break;
   }
 }
