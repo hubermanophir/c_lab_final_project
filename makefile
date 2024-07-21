@@ -14,12 +14,18 @@ endif
  
 all: build_env $(PROG_NAME) 
  
-$(PROG_NAME):  assembler.o process_lines.o helper_functions.o directive_line_validations.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front.o front_validations.o
+$(PROG_NAME):  assembler.o process_lines.o middle.o first_pass.o helper_functions.o directive_line_validations.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front.o front_validations.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
 assembler.o: src/assembler.c src/../header_files/front/front.h \
  src/../header_files/front/../data_structures/linked_list.h \
- src/../header_files/front/../global.h src/../header_files/global.h \
+ src/../header_files/front/../global.h \
+ src/../header_files/middle/middle.h \
+ src/../header_files/middle/../data_structures/linked_list.h \
+ src/../header_files/middle/../global.h \
+ src/../header_files/middle/./first_pass/first_pass.h \
+ src/../header_files/middle/./first_pass/../../data_structures/linked_list.h \
+ src/../header_files/middle/./first_pass/../../global.h \
  src/../header_files/preprocessor/preprocessor.h
 hashtable.o: src/data_structures/hashtable.c \
  src/data_structures/../../header_files/preprocessor/macro.h \
@@ -58,6 +64,14 @@ process_lines.o: src/front/process_lines.c \
  src/front/../../header_files/front/../global.h \
  src/front/../../header_files/global.h
 global.o: src/global.c src/../header_files/global.h
+first_pass.o: src/middle/first_pass/first_pass.c \
+ src/middle/first_pass/../../../header_files/data_structures/linked_list.h \
+ src/middle/first_pass/../../../header_files/global.h
+middle.o: src/middle/middle.c \
+ src/middle/../../header_files/data_structures/linked_list.h \
+ src/middle/../../header_files/middle/first_pass/first_pass.h \
+ src/middle/../../header_files/middle/first_pass/../../data_structures/linked_list.h \
+ src/middle/../../header_files/middle/first_pass/../../global.h
 helper.o: src/preprocessor/helper.c
 macro.o: src/preprocessor/macro.c \
  src/preprocessor/../../header_files/data_structures/linked_list.h
