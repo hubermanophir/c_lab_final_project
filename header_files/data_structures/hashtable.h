@@ -54,7 +54,7 @@ int get_existing_macro_names(Hashtable *hashtable, char ***existing_names);
  * @param key 
  * @return void* 
  */
-void *get_macro_hashtable(Hashtable *hashtable, char *key);
+void *get_by_name_field_hashtable(Hashtable *hashtable, char *key);
 
 /*End of Macro Hashtable methods*/
 

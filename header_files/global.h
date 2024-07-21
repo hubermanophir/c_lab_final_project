@@ -1,6 +1,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include "data_structures/hashtable.h"
+#include "data_structures/linked_list.h"
 #define MAX_LINE_LENGTH 81
 
 #include <ctype.h>
@@ -25,6 +27,8 @@
 #define MIN_VALUE -32768
 
 #define MAX_VALUE 32767
+
+#define MAX_MEMORY_SIZE 4096
 
 typedef enum Opcode {
   MOV,
@@ -122,9 +126,28 @@ typedef struct Tokens_Obj {
 } Tokens_Obj;
 
 typedef struct Symbol {
-  char name[MAX_LABEL_LENGTH];
+  char *name;
   int address;
   enum { external, entry, code, data } symbol_type;
 } Symbol;
+
+typedef struct Extern {
+  char name[MAX_LABEL_LENGTH];
+  int address[MAX_MEMORY_SIZE];
+  int addresses_count;
+} Extern;
+
+typedef struct Translation_Unit {
+  int ic;
+  int code_image[MAX_MEMORY_SIZE];
+  int dc;
+  int data_image[MAX_MEMORY_SIZE];
+  Hashtable *symbols_table;
+  int symbols_count;
+  LinkedList *externals;
+  int externals_count;
+  LinkedList *entries;
+  int entries_count;
+} Translation_Unit;
 
 #endif

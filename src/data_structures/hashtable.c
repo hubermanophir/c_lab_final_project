@@ -9,6 +9,10 @@ typedef struct HashEntry {
   struct HashEntry *next;
 } HashEntry;
 
+typedef struct StructWithName {
+  char *name;
+} StructWithName;
+
 typedef struct Hashtable {
   int size;
   HashEntry **table;
@@ -111,12 +115,13 @@ int get_existing_macro_names(Hashtable *hashtable, char ***existing_names) {
   return count;
 }
 
-void *get_macro_hashtable(Hashtable *hashtable, char *key) {
+/*End of Macro Hashtable methods*/
+void *get_by_name_field_hashtable(Hashtable *hashtable, char *key) {
   int hashed_key = hash(key, hashtable->size);
   HashEntry *entry = hashtable->table[hashed_key];
 
-  while (entry) {
-    if (strcmp(((Macro *)(entry->value))->name, key) == 0) {
+  while (entry != NULL) {
+    if (strcmp(((StructWithName *)(entry->value))->name, key) == 0) {
       return entry->value;
     }
 
@@ -125,5 +130,3 @@ void *get_macro_hashtable(Hashtable *hashtable, char *key) {
 
   return NULL;
 }
-
-/*End of Macro Hashtable methods*/

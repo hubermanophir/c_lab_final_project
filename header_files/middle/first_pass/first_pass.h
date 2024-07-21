@@ -4,6 +4,7 @@
 #include "../../data_structures/linked_list.h"
 #include "../../global.h"
 
-void first_pass(LinkedList *lines, int *is_valid_file);
+void first_pass(LinkedList *lines, int *is_valid_file,
+                Translation_Unit *translation_unit);
 
 #endif

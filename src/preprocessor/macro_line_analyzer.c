@@ -99,7 +99,7 @@ static int does_contain_invalid_chars(char *test_str) {
  */
 static InvalidMacroType is_valid_macro_name(char *name,
                                             Hashtable *existing_macros) {
-  if (get_macro_hashtable(existing_macros, name)) {
+  if (get_by_name_field_hashtable(existing_macros, name)) {
     return EXISTING;
   }
   if (get_opcode_from_string(name) != -1) {
@@ -181,7 +181,7 @@ MacroLineType get_line_type(char *line, Hashtable *existing_macros,
     if (!is_valid) {
       return INVALID;
     }
-    existing_macro = (Macro *)get_macro_hashtable(existing_macros, line);
+    existing_macro = (Macro *)get_by_name_field_hashtable(existing_macros, line);
     if (existing_macro) {
       return MACRO_CALL;
     }

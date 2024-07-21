@@ -51,7 +51,7 @@ char *preprocessor(char *file_name) {
       tok = line;
       SKIP_WHITESPACE(tok);
       trim_trailing_whitespace(tok);
-      current_macro = (Macro *)get_macro_hashtable(macros, tok);
+      current_macro = (Macro *)get_by_name_field_hashtable(macros, tok);
       output_macro(current_macro, an_file);
       current_macro = NULL;
       break;
