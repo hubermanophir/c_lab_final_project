@@ -121,4 +121,10 @@ typedef struct Tokens_Obj {
   int size;
 } Tokens_Obj;
 
+typedef struct Symbol {
+  char name[MAX_LABEL_LENGTH];
+  int address;
+  enum { external, entry, code, data } symbol_type;
+} Symbol;
+
 #endif

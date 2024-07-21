@@ -8,11 +8,20 @@ void first_pass(LinkedList *lines, int *is_valid_file) {
   Line_obj *current_line;
   while (current_node) {
     current_line = (Line_obj *)current_node->data;
+    /*Check error of line conversion*/
     if (current_line->LineType == ERROR) {
       printf("Line:%d, Error: %s\n", current_line->line_number,
              current_line->error);
       *is_valid_file = 0;
     }
+
+
+
+
+
+
+
+
     current_node = current_node->next;
   }
 }
