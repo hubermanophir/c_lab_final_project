@@ -71,8 +71,12 @@ char *preprocessor(char *file_name) {
     }
     case INVALID: {
       fclose(an_file);
+      fclose(as_file);
       remove(an_file_name);
-      exit(1);
+      free(an_file_name);
+      free(as_file_name);
+      free_hashtable(macros, (void (*)(void *))free_macro);
+      return NULL;
     }
     }
   }
