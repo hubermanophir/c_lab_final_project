@@ -98,6 +98,11 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
   case MOV:
   case ADD:
   case SUB: {
+    if (operands.amount < 2) {
+      strcpy(line_obj->error, "Invalid line, missing operands");
+      line_obj->LineType = ERROR;
+      break;
+    }
     if (!valid_operand_groups(FOUR_GROUP, THREE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
       line_obj->LineType = ERROR;
@@ -105,6 +110,11 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
     break;
   }
   case CMP: {
+    if (operands.amount < 2) {
+      strcpy(line_obj->error, "Invalid line, missing operands");
+      line_obj->LineType = ERROR;
+      break;
+    }
     if (!valid_operand_groups(FOUR_GROUP, FOUR_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
       line_obj->LineType = ERROR;
@@ -112,6 +122,11 @@ void validate_operands(Operands operands, Line_obj *line_obj, Opcode opcode) {
     break;
   }
   case LEA: {
+    if (operands.amount < 2) {
+      strcpy(line_obj->error, "Invalid line, missing operands");
+      line_obj->LineType = ERROR;
+      break;
+    }
     if (!valid_operand_groups(ONE_GROUP, THREE_GROUP, operands, line_obj)) {
       strcpy(line_obj->error, "Invalid line, incorrect operand types");
       line_obj->LineType = ERROR;
