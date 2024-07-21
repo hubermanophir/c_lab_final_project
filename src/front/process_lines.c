@@ -92,7 +92,6 @@ static Line_obj *process_single_line(char *line, int line_number) {
     exit(1);
   }
 
-  strcpy(line_obj->error, "");
   line_obj->line_number = line_number;
 
   if (strlen(line) > 0) {

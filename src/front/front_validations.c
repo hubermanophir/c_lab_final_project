@@ -58,11 +58,11 @@ void validate_instruction_line(Tokens_Obj *tokens_obj, Line_obj *line_obj) {
   line_obj->line_type.instruction.opcode_option = opcode;
   remove_first_token(tokens_obj);
   operands = get_operands(tokens_obj, line_obj);
-  if (strcmp(line_obj->error, "") != 0) {
+  if (line_obj->LineType == ERROR) {
     return;
   }
   validate_operands(operands, line_obj, opcode);
-  if (strcmp(line_obj->error, "") != 0) {
+  if (line_obj->LineType == ERROR) {
     return;
   }
   update_operands(line_obj, operands);
