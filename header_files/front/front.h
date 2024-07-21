@@ -6,6 +6,4 @@
 
 LinkedList *get_processed_lines(char *filename);
 
-void free_Line_obj(Line_obj *obj);
-
 #endif
