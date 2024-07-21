@@ -10,6 +10,7 @@ int main(int argc, char **argv) {
   char *line_error;
   LinkedList *lines;
   Node *current_list_item;
+  int is_valid_file = 1;
 
   an_file_name = preprocessor(argv[1]);
   if (!an_file_name) {
@@ -25,8 +26,12 @@ int main(int argc, char **argv) {
     if (((Line_obj *)current_list_item->data)->LineType == ERROR) {
       printf("Line:%d, Error: %s\n",
              ((Line_obj *)current_list_item->data)->line_number, line_error);
+      is_valid_file = 0;
     }
     current_list_item = current_list_item->next;
+  }
+  if (!is_valid_file) {
+    exit(1);
   }
 
   free(an_file_name);
