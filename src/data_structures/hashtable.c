@@ -130,3 +130,27 @@ void *get_by_name_field_hashtable(Hashtable *hashtable, char *key) {
 
   return NULL;
 }
+
+int get_existing_values(Hashtable *hashtable, void ***existing_values) {
+  int capacity = hashtable->size;
+  int count = 0, i;
+
+  *existing_values = (void **)malloc(sizeof(void *) * capacity);
+
+  for (i = 0; i < hashtable->size; i++) {
+    HashEntry *entry = hashtable->table[i];
+
+    while (entry) {
+      if (count == capacity) {
+        capacity *= 2;
+        *existing_values =
+            (void **)realloc(*existing_values, sizeof(void *) * capacity);
+      }
+      (*existing_values)[count] = entry->value;
+      count++;
+      entry = entry->next;
+    }
+  }
+
+  return count;
+}

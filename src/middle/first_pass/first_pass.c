@@ -16,11 +16,11 @@ void free_symbol(void *symbol) {
 
 void first_pass(FILE *am_file, int *is_valid_file,
                 Translation_Unit *translation_unit) {
-  int ic = 0, dc = 0, i, is_entry;
+  int ic = 0, dc = 0, i, is_entry, line_number = 1, existing_symbols_size;
   char line[MAX_LINE_LENGTH];
-  int line_number = 1;
   Line_obj *current_line;
   Symbol *symbol;
+  Symbol **existing_symbols;
   while (fgets(line, MAX_LINE_LENGTH, am_file)) {
     current_line = process_single_line(line, line_number++);
     /*Check error of line conversion*/
@@ -102,7 +102,8 @@ void first_pass(FILE *am_file, int *is_valid_file,
         break;
       case STRING:
         dc +=
-            strlen(current_line->line_type.directive.directive_operand.string);
+            strlen(current_line->line_type.directive.directive_operand.string) +
+            1;
         for (i = 0;
              i <
              strlen(current_line->line_type.directive.directive_operand.string);
@@ -111,6 +112,7 @@ void first_pass(FILE *am_file, int *is_valid_file,
           translation_unit->data_image[dc + i] =
               current_line->line_type.directive.directive_operand.string[i];
         }
+        translation_unit->data_image[dc + i] = '\0';
         break;
       case ENTRY:
       case EXTERN:
@@ -127,8 +129,8 @@ void first_pass(FILE *am_file, int *is_valid_file,
             free(current_line);
             continue;
           } else {
-            symbol->symbol_type = entry;
-            symbol->address = 0;
+            symbol->symbol_type =
+                symbol->symbol_type == code ? ent_code : ent_data;
           }
 
         } else {
@@ -147,4 +149,24 @@ void first_pass(FILE *am_file, int *is_valid_file,
 
     free(current_line);
   }
+
+  /*After checking all the lines and having the symbol table and the ic, dc and
+   * data_image filled*/
+  existing_symbols_size = get_existing_values(translation_unit->symbols_table,
+                                              (void ***)&existing_symbols);
+
+  for (i = 0; i < existing_symbols_size; i++) {
+    symbol = existing_symbols[i];
+
+    if (symbol->symbol_type == entry) {
+      printf("Error: Label %s entry but not declared in file\n", symbol->name);
+      *is_valid_file = 0;
+    } else if (symbol->symbol_type == data || symbol->symbol_type == ent_data) {
+      symbol->address += ic;
+    }
+    printf("Symbol name: %s, symbol type: %d, symbol address: %d\n", symbol->name,
+           symbol->symbol_type, symbol->address);
+  }
+
+  free(existing_symbols);
 }
