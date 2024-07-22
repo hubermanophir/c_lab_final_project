@@ -83,11 +83,11 @@ void trim_trailing_whitespace(char *str);
 char *make_char_copy(char *str);
 
 typedef enum AddressingMode {
-  IMMEDIATE,
-  DIRECT,
-  INDIRECT_ACCUMULATE,
-  DIRECT_ACCUMULATE,
-  NONE
+  IMMEDIATE = 1,           /*#3*/
+  DIRECT = 2,              /*LABEL*/
+  INDIRECT_ACCUMULATE = 4, /* *r2 */
+  DIRECT_ACCUMULATE = 8,   /*r2*/
+  NONE = 0
 } AddressingMode;
 
 typedef struct Line_obj {
@@ -154,5 +154,9 @@ typedef struct Translation_Unit {
   Hashtable *entries;
   int entries_count;
 } Translation_Unit;
+
+int is_register(AddressingMode addressing);
+
+typedef enum ARE { A = 4, R = 2, E = 1 } ARE;
 
 #endif

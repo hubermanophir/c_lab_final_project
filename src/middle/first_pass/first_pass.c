@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int is_register(AddressingMode addressing) {
-  return addressing == DIRECT_ACCUMULATE || addressing == INDIRECT_ACCUMULATE;
-}
-
 void free_symbol(void *symbol) {
   Symbol *s = (Symbol *)symbol;
   free(s->name);
@@ -187,7 +183,7 @@ void first_pass(FILE *am_file, int *is_valid_file,
       translation_unit->symbols_table, (void ***)&existing_entries);
 
   translation_unit->dc = dc;
-  translation_unit->ic = ic;
+  translation_unit->ic = 0;
   /* add correct lists of externals and internals */
   free(existing_symbols);
   free(existing_entries);

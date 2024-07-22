@@ -1,12 +1,12 @@
 #include "../header_files/global.h"
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Get the opcode from string
- * 
- * @param opcode 
- * @return Opcode 
+ *
+ * @param opcode
+ * @return Opcode
  */
 Opcode get_opcode_from_string(char *opcode) {
 
@@ -46,7 +46,6 @@ Opcode get_opcode_from_string(char *opcode) {
   return -1;
 }
 
-
 Directive get_directive_from_string(char *directive) {
   if (strcmp(directive, ".data") == 0) {
     return DATA;
@@ -60,7 +59,6 @@ Directive get_directive_from_string(char *directive) {
   return -1;
 }
 
-
 void trim_trailing_whitespace(char *str) {
   int len = strlen(str);
   while (len > 0 && isspace(str[len - 1])) {
@@ -69,8 +67,12 @@ void trim_trailing_whitespace(char *str) {
   }
 }
 
-char * make_char_copy(char *str) {
+char *make_char_copy(char *str) {
   char *copy = (char *)malloc(strlen(str) + 1);
   strcpy(copy, str);
   return copy;
+}
+
+int is_register(AddressingMode addressing) {
+  return addressing == DIRECT_ACCUMULATE || addressing == INDIRECT_ACCUMULATE;
 }

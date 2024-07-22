@@ -1,7 +1,5 @@
 #ifndef FIRST_PASS_H
 #define FIRST_PASS_H
-
-#include "../../data_structures/linked_list.h"
 #include "../../global.h"
 #include <stdio.h>
 

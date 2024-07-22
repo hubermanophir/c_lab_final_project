@@ -1,7 +1,7 @@
 .entry LIST
 .extern fn1
         prn #-5
-MAIN:   add r3, LIST
+MAIN:   add r3, BAD
         jsr fn1
 LOOP:   prn #48
         prn #-5
