@@ -18,7 +18,6 @@ void first_pass(LinkedList *lines, int *is_valid_file,
   int ic = 0, dc = 0;
   Node *current_node = lines->head;
   Line_obj *current_line;
-  Hashtable *symbols_table = create_hashtable(100);
   Symbol *symbol;
   while (current_node) {
     current_line = (Line_obj *)current_node->data;
@@ -35,8 +34,8 @@ void first_pass(LinkedList *lines, int *is_valid_file,
          (current_line->LineType == DIRECTIVE &&
           ((current_line->line_type.directive.directive_option == DATA) ||
            current_line->line_type.directive.directive_option == STRING)))) {
-      symbol = (Symbol *)get_by_name_field_hashtable(symbols_table,
-                                                     current_line->label);
+      symbol = (Symbol *)get_by_name_field_hashtable(
+          translation_unit->symbols_table, current_line->label);
       if (symbol != NULL) {
         printf("Line:%d, Error: Label %s already declared\n",
                current_line->line_number, current_line->label);
@@ -56,7 +55,7 @@ void first_pass(LinkedList *lines, int *is_valid_file,
           symbol->symbol_type = data;
           symbol->address = dc;
         }
-        put_hashtable(symbols_table, symbol->name, symbol);
+        put_hashtable(translation_unit->symbols_table, symbol->name, symbol);
       }
     }
 
@@ -70,6 +69,4 @@ void first_pass(LinkedList *lines, int *is_valid_file,
 
     current_node = current_node->next;
   }
-
-  free_hashtable(symbols_table, free);
 }

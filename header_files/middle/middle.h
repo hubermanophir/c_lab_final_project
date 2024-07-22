@@ -4,6 +4,7 @@
 #include "../global.h"
 #include "./first_pass/first_pass.h"
 
-void middle(LinkedList *lines, int *is_valid_file);
+void middle(LinkedList *lines, int *is_valid_file,
+            Translation_Unit *translation_unit);
 
 #endif
