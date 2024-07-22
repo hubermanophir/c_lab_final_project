@@ -128,7 +128,7 @@ typedef struct Tokens_Obj {
 typedef struct Symbol {
   char *name;
   int address;
-  enum { external, entry, code, data } symbol_type;
+  enum { external, entry, code, data, ent_data, ent_code } symbol_type;
 } Symbol;
 
 typedef struct Extern {
