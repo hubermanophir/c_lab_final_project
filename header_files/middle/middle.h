@@ -6,6 +6,6 @@
 #include <stdio.h>
 
 void middle(FILE *am_file, int *is_valid_file,
-            Translation_Unit *translation_unit, char *file_name);
+            Translation_Unit *translation_unit);
 
 #endif

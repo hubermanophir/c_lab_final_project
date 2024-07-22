@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
     translation_unit.entries = entries;
     am_file = fopen(an_file_name, "r");
 
-    middle(am_file, &is_valid_file, &translation_unit, argv[i]);
+    middle(am_file, &is_valid_file, &translation_unit);
 
     if (!is_valid_file) {
       free(an_file_name);

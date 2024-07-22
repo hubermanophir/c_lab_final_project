@@ -4,11 +4,11 @@
 #include <stdio.h>
 
 void middle(FILE *am_file, int *is_valid_file,
-            Translation_Unit *translation_unit, char *file_name) {
+            Translation_Unit *translation_unit) {
   first_pass(am_file, is_valid_file, translation_unit);
   if (!*is_valid_file) {
     return;
   }
   rewind(am_file);
-  second_pass(am_file, is_valid_file, translation_unit, file_name);
+  second_pass(am_file, is_valid_file, translation_unit);
 }
