@@ -17,7 +17,6 @@ void free_symbol(void *symbol) {
 void first_pass(FILE *am_file, int *is_valid_file,
                 Translation_Unit *translation_unit) {
   int ic = 0, dc = 0, i, is_entry, line_number = 1, existing_symbols_size;
-  int entries_size, externals_size;
   Ent *current_entry;
   Extern *current_external;
   char line[MAX_LINE_LENGTH];
@@ -184,7 +183,7 @@ void first_pass(FILE *am_file, int *is_valid_file,
                     current_external);
     }
   }
-  translation_unit->externals_count = get_existing_values(
+  translation_unit->entries_count = get_existing_values(
       translation_unit->symbols_table, (void ***)&existing_entries);
 
   translation_unit->dc = dc;

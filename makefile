@@ -14,7 +14,7 @@ endif
  
 all: build_env $(PROG_NAME) 
  
-$(PROG_NAME):  assembler.o process_lines.o middle.o first_pass.o helper_functions.o directive_line_validations.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front_validations.o
+$(PROG_NAME):  assembler.o process_lines.o second_pass.o middle.o first_pass.o helper_functions.o directive_line_validations.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front_validations.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
 assembler.o: src/assembler.c src/../header_files/middle/middle.h \
@@ -80,7 +80,9 @@ middle.o: src/middle/middle.c \
  src/middle/../../header_files/middle/first_pass/../../data_structures/linked_list.h \
  src/middle/../../header_files/middle/first_pass/../../global.h \
  src/middle/../../header_files/middle/first_pass/../../data_structures/hashtable.h \
- src/middle/../../header_files/middle/first_pass/../../data_structures/linked_list.h
+ src/middle/../../header_files/middle/first_pass/../../data_structures/linked_list.h \
+ src/middle/../../header_files/middle/second_pass/second_pass.h
+second_pass.o: src/middle/second_pass/second_pass.c
 helper.o: src/preprocessor/helper.c
 macro.o: src/preprocessor/macro.c \
  src/preprocessor/../../header_files/data_structures/linked_list.h
