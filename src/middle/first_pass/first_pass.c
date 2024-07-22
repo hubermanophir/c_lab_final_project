@@ -17,10 +17,14 @@ void free_symbol(void *symbol) {
 void first_pass(FILE *am_file, int *is_valid_file,
                 Translation_Unit *translation_unit) {
   int ic = 0, dc = 0, i, is_entry, line_number = 1, existing_symbols_size;
+  int entries_size, externals_size;
+  Ent *current_entry;
+  Extern *current_external;
   char line[MAX_LINE_LENGTH];
   Line_obj *current_line;
   Symbol *symbol;
   Symbol **existing_symbols;
+  Ent **existing_entries;
   while (fgets(line, MAX_LINE_LENGTH, am_file)) {
     current_line = process_single_line(line, line_number++);
     /*Check error of line conversion*/
@@ -161,12 +165,31 @@ void first_pass(FILE *am_file, int *is_valid_file,
     if (symbol->symbol_type == entry) {
       printf("Error: Label %s entry but not declared in file\n", symbol->name);
       *is_valid_file = 0;
+      continue;
     } else if (symbol->symbol_type == data || symbol->symbol_type == ent_data) {
       symbol->address += ic;
     }
-    printf("Symbol name: %s, symbol type: %d, symbol address: %d\n", symbol->name,
-           symbol->symbol_type, symbol->address);
+    if (symbol->symbol_type == ent_data || symbol->symbol_type == ent_code) {
+      current_entry = (Ent *)malloc(sizeof(Ent));
+      current_entry->name = make_char_copy(symbol->name);
+      current_entry->address = symbol->address;
+      put_hashtable(translation_unit->entries, current_entry->name,
+                    current_entry);
+    }
+    if (symbol->symbol_type == external) {
+      current_external = (Extern *)malloc(sizeof(Extern));
+      current_external->name = make_char_copy(symbol->name);
+      current_external->addresses_count = 0;
+      put_hashtable(translation_unit->externals, current_external->name,
+                    current_external);
+    }
   }
+  translation_unit->externals_count = get_existing_values(
+      translation_unit->symbols_table, (void ***)&existing_entries);
 
+  translation_unit->dc = dc;
+  translation_unit->ic = ic;
+  /* add correct lists of externals and internals */
   free(existing_symbols);
+  free(existing_entries);
 }

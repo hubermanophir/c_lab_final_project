@@ -137,6 +137,11 @@ typedef struct Extern {
   int addresses_count;
 } Extern;
 
+typedef struct Ent {
+  char *name;
+  int address;
+} Ent;
+
 typedef struct Translation_Unit {
   int ic;
   int code_image[MAX_MEMORY_SIZE];
@@ -144,9 +149,9 @@ typedef struct Translation_Unit {
   int data_image[MAX_MEMORY_SIZE];
   Hashtable *symbols_table;
   int symbols_count;
-  LinkedList *externals;
+  Hashtable *externals;
   int externals_count;
-  LinkedList *entries;
+  Hashtable *entries;
   int entries_count;
 } Translation_Unit;
 
