@@ -132,7 +132,7 @@ typedef struct Symbol {
 } Symbol;
 
 typedef struct Extern {
-  char name[MAX_LABEL_LENGTH];
+  char *name;
   int address[MAX_MEMORY_SIZE];
   int addresses_count;
 } Extern;

@@ -3,8 +3,9 @@
 #include "../data_structures/linked_list.h"
 #include "../global.h"
 #include "./first_pass/first_pass.h"
+#include <stdio.h>
 
-void middle(LinkedList *lines, int *is_valid_file,
+void middle(FILE *am_file, int *is_valid_file,
             Translation_Unit *translation_unit);
 
 #endif

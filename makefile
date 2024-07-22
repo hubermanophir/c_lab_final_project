@@ -14,15 +14,14 @@ endif
  
 all: build_env $(PROG_NAME) 
  
-$(PROG_NAME):  assembler.o process_lines.o middle.o first_pass.o helper_functions.o directive_line_validations.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front.o front_validations.o
+$(PROG_NAME):  assembler.o process_lines.o middle.o first_pass.o helper_functions.o directive_line_validations.o instruction_line_validations.o hashtable.o linked_list.o global.o helper.o macro.o macro_line_analyzer.o preprocessor.o front_validations.o
 	$(CC) $(CFLAGS) $(OBJ_DIR)/*.o -o $(BIN_DIR)/$@
  
-assembler.o: src/assembler.c src/../header_files/front/front.h \
- src/../header_files/front/../data_structures/linked_list.h \
- src/../header_files/front/../global.h \
- src/../header_files/middle/middle.h \
+assembler.o: src/assembler.c src/../header_files/middle/middle.h \
  src/../header_files/middle/../data_structures/linked_list.h \
  src/../header_files/middle/../global.h \
+ src/../header_files/middle/../data_structures/hashtable.h \
+ src/../header_files/middle/../data_structures/linked_list.h \
  src/../header_files/middle/./first_pass/first_pass.h \
  src/../header_files/middle/./first_pass/../../data_structures/linked_list.h \
  src/../header_files/middle/./first_pass/../../global.h \
@@ -34,16 +33,15 @@ linked_list.o: src/data_structures/linked_list.c
 directive_line_validations.o: src/front/directive_line_validations.c \
  src/front/../../header_files/front/helper_functions.h \
  src/front/../../header_files/front/../global.h \
+ src/front/../../header_files/front/../data_structures/hashtable.h \
+ src/front/../../header_files/front/../data_structures/linked_list.h \
  src/front/../../header_files/global.h
-front.o: src/front/front.c \
- src/front/../../header_files/data_structures/linked_list.h \
- src/front/../../header_files/front/process_lines.h \
- src/front/../../header_files/front/../../header_files/data_structures/linked_list.h \
- src/front/../../header_files/front/../../header_files/global.h
 front_validations.o: src/front/front_validations.c \
  src/front/../../header_files/front/directive_line_validations.h \
  src/front/../../header_files/front/../front/helper_functions.h \
  src/front/../../header_files/front/../front/../global.h \
+ src/front/../../header_files/front/../front/../data_structures/hashtable.h \
+ src/front/../../header_files/front/../front/../data_structures/linked_list.h \
  src/front/../../header_files/front/../global.h \
  src/front/../../header_files/front/instruction_line_validations.h \
  src/front/../../header_files/front/../../header_files/front/helper_functions.h \
@@ -52,36 +50,51 @@ front_validations.o: src/front/front_validations.c \
  src/front/../../header_files/front/validation_types.h \
  src/front/../../header_files/global.h
 helper_functions.o: src/front/helper_functions.c \
- src/front/../../header_files/global.h
+ src/front/../../header_files/global.h \
+ src/front/../../header_files/data_structures/hashtable.h \
+ src/front/../../header_files/data_structures/linked_list.h
 instruction_line_validations.o: src/front/instruction_line_validations.c \
  src/front/../../header_files/front/helper_functions.h \
  src/front/../../header_files/front/../global.h \
+ src/front/../../header_files/front/../data_structures/hashtable.h \
+ src/front/../../header_files/front/../data_structures/linked_list.h \
  src/front/../../header_files/front/validation_types.h \
  src/front/../../header_files/global.h
 process_lines.o: src/front/process_lines.c \
- src/front/../../header_files/data_structures/linked_list.h \
  src/front/../../header_files/front/front_validations.h \
  src/front/../../header_files/front/../global.h \
+ src/front/../../header_files/front/../data_structures/hashtable.h \
+ src/front/../../header_files/front/../data_structures/linked_list.h \
  src/front/../../header_files/global.h
-global.o: src/global.c src/../header_files/global.h
+global.o: src/global.c src/../header_files/global.h \
+ src/../header_files/data_structures/hashtable.h \
+ src/../header_files/data_structures/linked_list.h
 first_pass.o: src/middle/first_pass/first_pass.c \
- src/middle/first_pass/../../../header_files/data_structures/linked_list.h \
+ src/middle/first_pass/../../../header_files/front/process_lines.h \
+ src/middle/first_pass/../../../header_files/front/../../header_files/global.h \
+ src/middle/first_pass/../../../header_files/front/../../header_files/data_structures/hashtable.h \
+ src/middle/first_pass/../../../header_files/front/../../header_files/data_structures/linked_list.h \
  src/middle/first_pass/../../../header_files/global.h
 middle.o: src/middle/middle.c \
- src/middle/../../header_files/data_structures/linked_list.h \
  src/middle/../../header_files/middle/first_pass/first_pass.h \
  src/middle/../../header_files/middle/first_pass/../../data_structures/linked_list.h \
- src/middle/../../header_files/middle/first_pass/../../global.h
+ src/middle/../../header_files/middle/first_pass/../../global.h \
+ src/middle/../../header_files/middle/first_pass/../../data_structures/hashtable.h \
+ src/middle/../../header_files/middle/first_pass/../../data_structures/linked_list.h
 helper.o: src/preprocessor/helper.c
 macro.o: src/preprocessor/macro.c \
  src/preprocessor/../../header_files/data_structures/linked_list.h
 macro_line_analyzer.o: src/preprocessor/macro_line_analyzer.c \
  src/preprocessor/../../header_files/data_structures/hashtable.h \
  src/preprocessor/../../header_files/global.h \
+ src/preprocessor/../../header_files/data_structures/hashtable.h \
+ src/preprocessor/../../header_files/data_structures/linked_list.h \
  src/preprocessor/../../header_files/preprocessor/Macro.h \
  src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h
 preprocessor.o: src/preprocessor/preprocessor.c \
  src/preprocessor/../../header_files/global.h \
+ src/preprocessor/../../header_files/data_structures/hashtable.h \
+ src/preprocessor/../../header_files/data_structures/linked_list.h \
  src/preprocessor/../../header_files/preprocessor/helper.h \
  src/preprocessor/../../header_files/preprocessor/macro.h \
  src/preprocessor/../../header_files/preprocessor/../../header_files/data_structures/linked_list.h \

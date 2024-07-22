@@ -1,4 +1,3 @@
-#include "../../header_files/data_structures/linked_list.h"
 #include "../../header_files/front/front_validations.h"
 #include "../../header_files/global.h"
 #include <stdio.h>
@@ -80,7 +79,7 @@ Opcode is_opcode_in_tokens(Tokens_Obj tokens_obj) {
   return 0;
 }
 
-static Line_obj *process_single_line(char *line, int line_number) {
+Line_obj *process_single_line(char *line, int line_number) {
   Line_obj *line_obj;
   Tokens_Obj tokens_obj;
   char line_copy[MAX_LINE_LENGTH];
@@ -125,15 +124,4 @@ static Line_obj *process_single_line(char *line, int line_number) {
   line_obj->LineType = ERROR;
 
   return line_obj;
-}
-
-void process_lines(FILE *am_file, LinkedList *lines) {
-  char line[MAX_LINE_LENGTH];
-  int line_number = 1;
-  Line_obj *line_obj;
-
-  while (fgets(line, MAX_LINE_LENGTH, am_file)) {
-    line_obj = process_single_line(line, line_number++);
-    append_to_list_end(lines, line_obj);
-  }
 }

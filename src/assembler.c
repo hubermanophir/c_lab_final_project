@@ -1,5 +1,4 @@
 
-#include "../header_files/front/front.h"
 #include "../header_files/middle/middle.h"
 #include "../header_files/preprocessor/preprocessor.h"
 #include <stdio.h>
@@ -7,9 +6,9 @@
 
 int main(int argc, char **argv) {
   char *an_file_name;
-  LinkedList *lines;
   Hashtable *symbols_table;
   Translation_Unit translation_unit = {0};
+  FILE *am_file;
   int i, is_valid_file;
   argc--;
   argv++;
@@ -23,26 +22,25 @@ int main(int argc, char **argv) {
       continue;
     }
 
-    lines = get_processed_lines(an_file_name);
     symbols_table = create_hashtable(100);
     if (symbols_table == NULL) {
       printf("Memory allocation failed\n");
       exit(1);
     }
     translation_unit.symbols_table = symbols_table;
-    middle(lines, &is_valid_file, &translation_unit);
+    am_file = fopen(an_file_name, "r");
+
+    middle(am_file, &is_valid_file, &translation_unit);
 
     if (!is_valid_file) {
       free(an_file_name);
-      free_list(lines, free);
-      free_hashtable(symbols_table, free);
+      free_hashtable(symbols_table, free_symbol);
       continue;
     }
     printf("%s.as is valid\n", argv[i]);
 
     free(an_file_name);
-    free_list(lines, free);
-    free_hashtable(symbols_table, free);
+    free_hashtable(symbols_table, free_symbol);
   }
 
   return 0;
