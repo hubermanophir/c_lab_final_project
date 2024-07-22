@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define START_ADDRESS 100
-
 void printBinary15Bits(int number) {
   int i, bit;
   for (i = 14; i >= 0; i--) {
@@ -57,7 +55,6 @@ void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,
   default:
     break;
   }
-  printBinary15Bits(translation_unit->code_image[translation_unit->ic]);
 }
 
 void add_to_code_image(Translation_Unit *translation_unit, int *code_image,
@@ -72,7 +69,6 @@ void add_to_code_image(Translation_Unit *translation_unit, int *code_image,
         current_line->line_type.instruction.addressing[0] << 7;
     translation_unit->code_image[translation_unit->ic] |=
         current_line->line_type.instruction.addressing[1] << 3;
-    printBinary15Bits(translation_unit->code_image[translation_unit->ic]);
 
     if (is_register(current_line->line_type.instruction.addressing[0]) &&
         is_register(current_line->line_type.instruction.addressing[1])) {
@@ -82,7 +78,6 @@ void add_to_code_image(Translation_Unit *translation_unit, int *code_image,
       code_image[translation_unit->ic] |=
           current_line->line_type.instruction.operands[1].register_index << 3;
       add_ARE(A, &translation_unit->code_image[translation_unit->ic]);
-      printBinary15Bits(translation_unit->code_image[translation_unit->ic]);
       return;
     }
     add_code_per_operand(translation_unit, code_image, current_line, 0,
@@ -92,7 +87,6 @@ void add_to_code_image(Translation_Unit *translation_unit, int *code_image,
   } else if (operand_length == 1) {
     translation_unit->code_image[translation_unit->ic] |=
         current_line->line_type.instruction.addressing[0] << 3;
-    printBinary15Bits(translation_unit->code_image[translation_unit->ic]);
 
     add_code_per_operand(translation_unit, code_image, current_line, 0,
                          is_valid_file);
@@ -106,14 +100,12 @@ void second_pass(FILE *am_file, int *is_valid_file,
   Line_obj *current_line;
 
   while (fgets(line, MAX_LINE_LENGTH, am_file)) {
-    printf("Line: %s \n", line);
     current_line = process_single_line(line, line_number++);
     if (current_line->LineType == INSTRUCTION) {
       add_to_code_image(translation_unit, translation_unit->code_image,
                         current_line, is_valid_file);
       translation_unit->ic++;
     }
-
     free(current_line);
   }
 }

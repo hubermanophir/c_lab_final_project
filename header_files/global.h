@@ -30,6 +30,8 @@
 
 #define MAX_MEMORY_SIZE 4096
 
+#define START_ADDRESS 100
+
 typedef enum Opcode {
   MOV,
   CMP,
