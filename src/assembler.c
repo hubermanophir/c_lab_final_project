@@ -1,4 +1,5 @@
 
+#include "../header_files/file_assembler/file_assembler.h"
 #include "../header_files/middle/middle.h"
 #include "../header_files/preprocessor/preprocessor.h"
 #include <stdio.h>
@@ -45,6 +46,8 @@ int main(int argc, char **argv) {
       free_hashtable(symbols_table, free_symbol);
       continue;
     }
+
+    file_assembler();
     printf("%s.as is valid\n", argv[i]);
 
     free(an_file_name);
