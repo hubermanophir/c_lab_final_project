@@ -7,7 +7,13 @@
 #define ENTRY_FILE_EXTENSION ".ent"
 #define EXTERN_FILE_EXTENSION ".ext"
 
-void convert_15_to_5(FILE *file, int number) {
+/**
+ * @brief Takes a number and converts it to a 5 base number
+ * meaning takes something like this in binary  = 001010000010100 and converts to 12024
+ * @param file 
+ * @param number 
+ */
+static void convert_15_to_5(FILE *file, int number) {
     int i, bit, count = 0, result = 0;
     for (i = 14; i >= 0; i--) {
         bit = (number >> i) & 1;

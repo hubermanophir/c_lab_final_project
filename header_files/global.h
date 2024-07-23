@@ -92,6 +92,8 @@ typedef enum AddressingMode {
   NONE = 0
 } AddressingMode;
 
+typedef enum ARE { A = 4, R = 2, E = 1 } ARE;
+
 typedef struct Line_obj {
   char error[MAX_DATA_SIZE];
   char label[MAX_LABEL_LENGTH];
@@ -159,6 +161,5 @@ typedef struct Translation_Unit {
 
 int is_register(AddressingMode addressing);
 
-typedef enum ARE { A = 4, R = 2, E = 1 } ARE;
 
 #endif

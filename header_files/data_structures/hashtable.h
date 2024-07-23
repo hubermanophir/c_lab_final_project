@@ -56,7 +56,14 @@ int get_existing_macro_names(Hashtable *hashtable, char ***existing_names);
 void *get_by_name_field_hashtable(Hashtable *hashtable, char *key);
 
 /*End of Macro Hashtable methods*/
-
+/**
+ * @brief This function is updating the existing_values array to be 
+ all the pointers to the pointers in the hashtable
+ * 
+ * @param hashtable 
+ * @param existing_values 
+ * @return int the size of the existing_values array
+ */
 int get_existing_values(Hashtable *hashtable, void ***existing_values);
 
 #endif
