@@ -40,6 +40,8 @@ int main(int argc, char **argv) {
     middle(am_file, &is_valid_file, &translation_unit);
 
     if (!is_valid_file) {
+      printf("%s.as is NOT valid\n\n", argv[i]);
+
       free(an_file_name);
       free_hashtable(entries, free_symbol);
       free_hashtable(externals, free_symbol);
@@ -48,7 +50,7 @@ int main(int argc, char **argv) {
     }
 
     file_assembler(&translation_unit, argv[i]);
-    printf("%s.as is valid\n", argv[i]);
+    printf("%s.as is valid\n\n", argv[i]);
 
     free(an_file_name);
     free_hashtable(entries, free_symbol);

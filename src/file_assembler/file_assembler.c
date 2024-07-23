@@ -7,21 +7,18 @@
 #define ENTRY_FILE_EXTENSION ".ent"
 #define EXTERN_FILE_EXTENSION ".ext"
 
-void printBinary15Bits(int number) {
-  int i, bit;
-  for (i = 14; i >= 0; i--) {
-    bit = (number >> i) & 1;
-    printf("%d", bit);
-  }
-  printf("\n");
-}
-
-void add_binary_15_to_file(FILE *file, int number) {
-  int i, bit;
-  for (i = 14; i >= 0; i--) {
-    bit = (number >> i) & 1;
-    fprintf(file, "%d", bit);
-  }
+void convert_15_to_5(FILE *file, int number) {
+    int i, bit, count = 0, result = 0;
+    for (i = 14; i >= 0; i--) {
+        bit = (number >> i) & 1;
+        result = (result << 1) | bit;
+        count++;
+        if (count == 3) {
+            fprintf(file, "%d", result);
+            count = 0;
+            result = 0;
+        }
+    }
 }
 
 void file_assembler(Translation_Unit *translation_unit, char *file_name) {
@@ -75,13 +72,13 @@ void file_assembler(Translation_Unit *translation_unit, char *file_name) {
   fprintf(obj_file, "  %d\t%d\n", ic, dc);
   for (i = 0; i < ic; i++) {
     fprintf(obj_file, "0%d\t", i + START_ADDRESS);
-    add_binary_15_to_file(obj_file, code_image[i]);
+    convert_15_to_5(obj_file, code_image[i]);
     fputs("\n", obj_file);
   }
 
   for (i = 0; i < dc; i++) {
     fprintf(obj_file, "0%d\t", i + ic + START_ADDRESS);
-    add_binary_15_to_file(obj_file, data_image[i]);
+    convert_15_to_5(obj_file, data_image[i]);
     fputs("\n", obj_file);
   }
 
