@@ -18,6 +18,9 @@ char *preprocessor(char *file_name) {
 
   char *as_file_name = get_file_name(file_name, ".as");
   char *an_file_name = get_file_name(file_name, ".an");
+  as_file = fopen(as_file_name, "a");
+  fputc('\n', as_file);
+  fclose(as_file);
   as_file = fopen(as_file_name, "r");
   an_file = fopen(an_file_name, "w");
 

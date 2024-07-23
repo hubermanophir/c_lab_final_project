@@ -10,7 +10,7 @@ ifdef DEBUG
 CFLAGS += -g -fsanitize=address
 endif
  
-.PHONY: clean build_env all
+.PHONY: clean build_env all folder_clean
  
 all: build_env $(PROG_NAME) 
  
@@ -122,7 +122,16 @@ preprocessor.o: src/preprocessor/preprocessor.c \
 clean:
 	rm -rf $(BUILD_DIR)
 	find . -type f -name '*.an' -delete
+	find . -type f -name '*.ob' -delete
+	find . -type f -name '*.ent' -delete
+	find . -type f -name '*.ext' -delete
  
+folder_clean:
+	find . -type f -name '*.an' -delete
+	find . -type f -name '*.ob' -delete
+	find . -type f -name '*.ent' -delete
+	find . -type f -name '*.ext' -delete
+
 build_env:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(BIN_DIR)

@@ -3,15 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void printBinary15Bits(int number) {
-  int i, bit;
-  for (i = 14; i >= 0; i--) {
-    bit = (number >> i) & 1;
-    printf("%d", bit);
-  }
-  printf("\n");
-}
-
 void add_ARE(ARE are, int *code_line) { *code_line |= are; }
 
 void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,

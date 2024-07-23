@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
       continue;
     }
 
-    file_assembler();
+    file_assembler(&translation_unit, argv[i]);
     printf("%s.as is valid\n", argv[i]);
 
     free(an_file_name);

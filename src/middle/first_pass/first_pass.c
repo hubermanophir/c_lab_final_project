@@ -89,7 +89,6 @@ void first_pass(FILE *am_file, int *is_valid_file,
     } else {
       switch (current_line->line_type.directive.directive_option) {
       case DATA:
-        dc += current_line->line_type.directive.directive_operand.data.length;
         for (i = 0;
              i <
              current_line->line_type.directive.directive_operand.data.length;
@@ -98,11 +97,9 @@ void first_pass(FILE *am_file, int *is_valid_file,
               current_line->line_type.directive.directive_operand.data
                   .numbers[i];
         }
+        dc += current_line->line_type.directive.directive_operand.data.length;
         break;
       case STRING:
-        dc +=
-            strlen(current_line->line_type.directive.directive_operand.string) +
-            1;
         for (i = 0;
              i <
              strlen(current_line->line_type.directive.directive_operand.string);
@@ -112,6 +109,9 @@ void first_pass(FILE *am_file, int *is_valid_file,
               current_line->line_type.directive.directive_operand.string[i];
         }
         translation_unit->data_image[dc + i] = '\0';
+        dc +=
+            strlen(current_line->line_type.directive.directive_operand.string) +
+            1;
         break;
       case ENTRY:
       case EXTERN:
@@ -184,7 +184,6 @@ void first_pass(FILE *am_file, int *is_valid_file,
 
   translation_unit->dc = dc;
   translation_unit->ic = 0;
-  /* add correct lists of externals and internals */
   free(existing_symbols);
   free(existing_entries);
 }
