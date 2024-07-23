@@ -135,7 +135,7 @@ typedef struct Symbol {
 
 typedef struct Extern {
   char *name;
-  int address[MAX_MEMORY_SIZE];
+  int addresses[MAX_MEMORY_SIZE];
   int addresses_count;
 } Extern;
 

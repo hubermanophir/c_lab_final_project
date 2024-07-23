@@ -20,6 +20,7 @@ void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,
   Symbol *symbol;
   AddressingMode addressing_mode =
       current_line->line_type.instruction.addressing[index];
+  Extern *existing_external;
   translation_unit->ic++;
   switch (addressing_mode) {
   case IMMEDIATE:
@@ -35,10 +36,16 @@ void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,
     if (symbol) {
       if (symbol->symbol_type == external) {
         add_ARE(E, &translation_unit->code_image[translation_unit->ic]);
+        existing_external = get_by_name_field_hashtable(
+            translation_unit->externals, symbol->name);
+        existing_external->addresses[existing_external->addresses_count++] =
+            translation_unit->ic + START_ADDRESS;
+        break;
       } else {
         code_image[translation_unit->ic] |= (symbol->address + START_ADDRESS)
                                             << 3;
         add_ARE(R, &translation_unit->code_image[translation_unit->ic]);
+        break;
       }
     } else {
       *is_valid_file = 0;

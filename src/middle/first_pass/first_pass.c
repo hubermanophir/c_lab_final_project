@@ -167,7 +167,7 @@ void first_pass(FILE *am_file, int *is_valid_file,
     if (symbol->symbol_type == ent_data || symbol->symbol_type == ent_code) {
       current_entry = (Ent *)malloc(sizeof(Ent));
       current_entry->name = make_char_copy(symbol->name);
-      current_entry->address = symbol->address;
+      current_entry->address = symbol->address + START_ADDRESS;
       put_hashtable(translation_unit->entries, current_entry->name,
                     current_entry);
     }
