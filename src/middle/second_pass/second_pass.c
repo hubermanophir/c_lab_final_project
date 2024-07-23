@@ -5,7 +5,16 @@
 
 void add_ARE(ARE are, int *code_line) { *code_line |= are; }
 
-void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,
+/**
+ * @brief for instruction line we add to the code_image per operand
+ * 
+ * @param translation_unit 
+ * @param code_image 
+ * @param current_line 
+ * @param index 
+ * @param is_valid_file 
+ */
+static void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,
                           Line_obj *current_line, int index,
                           int *is_valid_file) {
   Symbol *symbol;
@@ -55,7 +64,15 @@ void add_code_per_operand(Translation_Unit *translation_unit, int *code_image,
   }
 }
 
-void add_to_code_image(Translation_Unit *translation_unit, int *code_image,
+/**
+ * @brief Checking for case of multiple operands in instruction line
+ * 
+ * @param translation_unit 
+ * @param code_image 
+ * @param current_line 
+ * @param is_valid_file 
+ */
+static void add_to_code_image(Translation_Unit *translation_unit, int *code_image,
                        Line_obj *current_line, int *is_valid_file) {
   int operand_length = current_line->line_type.instruction.length;
   translation_unit->code_image[translation_unit->ic] =

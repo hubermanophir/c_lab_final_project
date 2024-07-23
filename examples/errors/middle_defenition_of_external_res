@@ -1,0 +1,5 @@
+Processing file: examples/middle_defenition_of_external.as
+Line:8, Error: Label TEST external but declared in file
+Line:25, Error: Label L3 external but declared in file
+examples/middle_defenition_of_external.as is NOT valid
+

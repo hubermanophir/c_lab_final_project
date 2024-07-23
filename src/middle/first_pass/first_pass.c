@@ -89,6 +89,7 @@ void first_pass(FILE *am_file, int *is_valid_file,
     } else {
       switch (current_line->line_type.directive.directive_option) {
       case DATA:
+      /*Input every data number*/
         for (i = 0;
              i <
              current_line->line_type.directive.directive_operand.data.length;
@@ -100,6 +101,7 @@ void first_pass(FILE *am_file, int *is_valid_file,
         dc += current_line->line_type.directive.directive_operand.data.length;
         break;
       case STRING:
+      /*Input for each char of the string*/
         for (i = 0;
              i <
              strlen(current_line->line_type.directive.directive_operand.string);
@@ -149,11 +151,13 @@ void first_pass(FILE *am_file, int *is_valid_file,
     free(current_line);
   }
 
-  /*After checking all the lines and having the symbol table and the ic, dc and
-   * data_image filled*/
   existing_symbols_size = get_existing_values(translation_unit->symbols_table,
                                               (void ***)&existing_symbols);
 
+
+/* Here we update the existing entries and externals and validate 
+that every entry was defined in file
+ */
   for (i = 0; i < existing_symbols_size; i++) {
     symbol = existing_symbols[i];
 

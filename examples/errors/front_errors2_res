@@ -1,0 +1,7 @@
+Processing file: examples/front_errors2.as
+Line:9, Error: Invalid line, too many operands
+Line:10, Error: Invalid line, missing operands
+Line:12, Error: Invalid line, missing operands
+Line:15, Error: Invalid line, missing operands
+examples/front_errors2.as is NOT valid
+

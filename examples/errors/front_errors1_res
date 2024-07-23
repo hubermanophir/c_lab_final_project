@@ -1,0 +1,7 @@
+Processing file: examples/front_errors1.as
+Line:1, Error: Extern directive should have only one operand
+Line:7, Error: Invalid register number
+Line:13, Error: String missing quotes
+Line:14, Error: Invalid number
+examples/front_errors1.as is NOT valid
+

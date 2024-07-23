@@ -1,0 +1,5 @@
+Processing file: examples/middle_duplicate_declaration.as
+Line:4, Error: Label MAIN already declared
+Line:7, Error: Label LOOP already declared
+examples/middle_duplicate_declaration.as is NOT valid
+
